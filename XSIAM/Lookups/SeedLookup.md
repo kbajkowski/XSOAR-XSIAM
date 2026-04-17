@@ -23,7 +23,6 @@ To use this script properly in XSIAM, you need to provide the following args:
 | Argument | Requirement | Description |
 | :--- | :--- | :--- |
 | **`source_using`** | **Mandatory** | The exact name of the Core REST API integration instance configured to reach out to the production/remote server. |
-| **`destination_using`** | **Mandatory** | The name of the Core REST API integration instance executing on the local/dev server. |
 | **`xql_query`** | **Mandatory** | The exact XQL query string you want to execute on the production system. Provide limits directly within this query if needed. |
 | **`time_from`** | **Mandatory** | The start of the timeframe for the query, represented in epoch milliseconds (e.g., `1598907600000`). |
 | **`time_to`** | **Mandatory** | The end of the timeframe for the query, represented in epoch milliseconds (e.g., `1599080399000`). |
