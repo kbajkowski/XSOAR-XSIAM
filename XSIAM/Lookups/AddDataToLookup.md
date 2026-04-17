@@ -1,4 +1,4 @@
-# XSIAM Lookup Dataset Manager
+# Add Data To Lookup Datasets
 
 **Author Name:** Kris Bajkowski  
 **Platform:** XSIAM  
