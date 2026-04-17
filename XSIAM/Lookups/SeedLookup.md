@@ -12,6 +12,9 @@ During data processing, the script automatically drops the `_time` and `_insert_
 
 ## Prerequisites
 
+**!!BIG WARNING!!**
+Using this script incurs Compute Unit costs against the production server because it executes a XQL query via the API. Use at your own discretion!!!!!
+
 **Core REST API Integration Setup:**
 To use this script, you must have the **Cortex Core REST API** integration enabled and configured. Specifically, you need an integration instance set up on your development/current environment that is explicitly authenticated and pointed at the **source (production) instance** of XSIAM. 
 * The name of this integration instance will be passed into the `source_using` argument to ensure the script routes the API calls to the correct remote server.
