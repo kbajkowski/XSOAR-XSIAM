@@ -38,3 +38,10 @@ The script outputs two files directly to the WarRoom as downloadable artifacts a
   * A single-line, flattened JSON object representing the first row of results. All primitive values (strings, ints, booleans) are masked and replaced with the string `"placeholder"`.
 * **File 2:** `data.json` 
   * A pretty-printed, bulk JSON array containing all retrieved rows, with system time columns removed and leading underscores stripped from column keys.
+
+## Future Improvements
+
+| Improvement | Details |
+| :--- | :--- |
+| **Remove Dependency on Running Query via API** | User should be able to upload a csv, tsv, or json file that contains XQL Query results already, and the script should create a seed_file.json and a data.json based off of that. This will remove the worry of using compute units. |
+| **Allow TXT File for Query Argument** | Allow user to pass in a txt file that contains the XQL query as the "xql_query" arg in case the query is complex. This will prevent the user from having to escape a bunch of quotation marks in the CLI. |
