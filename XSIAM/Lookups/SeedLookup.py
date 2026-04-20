@@ -63,7 +63,7 @@ class XSIAMQueryManager:
         body = {
             "request_data": {
                 "query_id": query_id,
-                "pending_jobs_timeout": 0
+                "pending_flag": True
             }
         }
 
@@ -76,7 +76,7 @@ class XSIAMQueryManager:
 
             if status == "SUCCESS":
                 return reply.get("results", {}).get("data", [])
-            elif status in ["PENDING", "RUNNING"]:
+            elif status == "PENDING":
                 time.sleep(sleep_interval)
             else:
                 raise Exception(f"Query execution failed or reached an unknown state: {status}")
