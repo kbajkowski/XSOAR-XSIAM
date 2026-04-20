@@ -92,10 +92,38 @@ class DataProcessor:
     def __init__(self):
         self.excluded_columns = {"_insert_time", "_time"}
 
+    def try_parse_json(self, value: Any) -> Any:
+        """
+        Attempts to parse a string into a JSON object if it looks like JSON.
+        Recursively processes dictionaries and lists to catch deeply nested stringified JSON.
+        """
+        if isinstance(value, str):
+            val_stripped = value.strip()
+            # Check if the string is wrapped in JSON object {} or array [] brackets
+            if (val_stripped.startswith('{') and val_stripped.endswith('}')) or \
+               (val_stripped.startswith('[') and val_stripped.endswith(']')):
+                try:
+                    parsed = json.loads(val_stripped)
+                    # Recursively check the newly parsed object in case there is MORE stringified JSON inside
+                    return self.try_parse_json(parsed)
+                except json.JSONDecodeError:
+                    # If it fails to parse (e.g. malformed), just return the original string safely
+                    return value
+            return value
+            
+        elif isinstance(value, dict):
+            return {k: self.try_parse_json(v) for k, v in value.items()}
+            
+        elif isinstance(value, list):
+            return [self.try_parse_json(item) for item in value]
+            
+        else:
+            return value
+
     def process_data(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
         Iterates over all results, drops specific time columns,
-        and renames any columns starting with an underscore.
+        renames any columns starting with an underscore, and expands stringified JSON.
         """
         if not data:
             return []
@@ -112,7 +140,8 @@ class DataProcessor:
                 # Requirement: rename any other column names that have a leading underscore
                 new_key = key.lstrip("_") if key.startswith("_") else key
 
-                processed_row[new_key] = value
+                # Convert stringified JSON to actual JSON objects before appending
+                processed_row[new_key] = self.try_parse_json(value)
 
             processed_data.append(processed_row)
 
@@ -126,6 +155,9 @@ class DataProcessor:
         if isinstance(data, dict):
             return {k: self.mask_values(v, placeholder_text) for k, v in data.items()}
         elif isinstance(data, list):
+            # If a list is completely empty, keep it empty rather than adding a placeholder
+            if not data:
+                return []
             return [self.mask_values(item, placeholder_text) for item in data]
         else:
             return placeholder_text
@@ -161,7 +193,7 @@ def main():
             return_results("Query executed successfully but returned 0 rows. No files generated.")
             return
 
-        # 3. Process the data (drop/rename columns across the whole dataset)
+        # 3. Process the data (drop/rename columns, parse JSON strings across the whole dataset)
         processed_data = processor.process_data(raw_data)
 
         # 4. Create Seed File (Index 0 only) and return to WarRoom
