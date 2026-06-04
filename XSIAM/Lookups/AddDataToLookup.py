@@ -100,8 +100,8 @@ class LookupDatasetManager:
                     row.pop(field, None)
         return data
 
-    def _stringify_complex_types(self, data: list) -> list:
-        """Converts nested arrays and dictionaries into JSON strings to match XSIAM schema."""
+    def _stringify_types(self, data: list) -> list:
+        """Converts nested arrays, dictionaries, integers, and floats into strings to match XSIAM schema."""
         for row in data:
             if isinstance(row, dict):
                 for key, value in row.items():
@@ -109,6 +109,9 @@ class LookupDatasetManager:
                         # Stringify the nested JSON so the API accepts it as text
                         # while preserving the exact JSON structure for XQL queries
                         row[key] = json.dumps(value)
+                    elif isinstance(value, (int, float)):
+                        # Convert integers and floats into strings 
+                        row[key] = str(value)
         return data
 
     def _build_payload(self, parsed_data: list) -> dict:
@@ -191,8 +194,8 @@ class LookupDatasetManager:
         # 2. Scrub system fields to prevent API errors
         parsed_data = self._remove_system_fields(parsed_data)
 
-        # 3. Stringify complex JSON arrays/objects to pass XSIAM schema validation
-        parsed_data = self._stringify_complex_types(parsed_data)
+        # 3. Stringify complex JSON arrays/objects and integers/floats to pass XSIAM schema validation
+        parsed_data = self._stringify_types(parsed_data)
 
         # 4. Build Payload
         payload = self._build_payload(parsed_data)
