@@ -1,0 +1,126 @@
+# Mirroring YAML Reference — extracted from ServiceNowv2
+# Source: Packs/ServiceNow/Integrations/ServiceNowv2/ServiceNowv2.yml
+#
+# This shows the configuration parameters and script-level flags needed to
+# enable incident mirroring in an XSOAR/XSIAM integration.
+
+# ── Script-level flags ────────────────────────────────────────────────────────
+# These go inside the `script:` block alongside `type`, `subtype`, `commands`, etc.
+#
+# script:
+#   ismappable: true        # allows field mapping in the UI
+#   isremotesyncin: true    # enables incoming mirroring (get-remote-data)
+#   isremotesyncout: true   # enables outgoing mirroring (update-remote-system)
+#   ...
+
+# ── Configuration parameters for mirroring ───────────────────────────────────
+# Add these to the `configuration:` block of your integration YAML.
+
+configuration:
+
+  # Direction dropdown — which way to mirror
+  - additionalinfo: 'Choose the direction to mirror the incident: Incoming (from remote
+      to Cortex XSOAR), Outgoing (from Cortex XSOAR to remote), or Incoming and Outgoing.'
+    defaultvalue: None
+    display: Incident Mirroring Direction
+    name: mirror_direction
+    options:
+    - None
+    - Incoming
+    - Outgoing
+    - Incoming And Outgoing
+    type: 15
+    required: false
+
+  # Entry tags — used to route War Room entries to the right remote field
+  - additionalinfo: Tag to add to an entry to mirror it as a comment in the remote system.
+    defaultvalue: comments
+    display: Comment Entry Tag To Remote
+    name: comment_tag
+    type: 0
+    required: false
+
+  - additionalinfo: Tag that marks a comment received from the remote system (prevents re-mirroring).
+    defaultvalue: CommentFromRemote
+    display: Comment Entry Tag From Remote
+    name: comment_tag_from_remote
+    type: 0
+    required: false
+
+  - additionalinfo: Tag to add to an entry to mirror it as a file in the remote system.
+    defaultvalue: ForRemote
+    display: File Entry Tag To Remote
+    name: file_tag
+    type: 0
+    required: false
+
+  - additionalinfo: Tag that marks a file received from the remote system (prevents re-mirroring).
+    defaultvalue: FromRemote
+    display: File Entry Tag From Remote
+    name: file_tag_from_remote
+    type: 0
+    required: false
+
+  # Mirror polling controls
+  - additionalinfo: If more incidents than this limit were modified, excess won't be mirrored in.
+    defaultvalue: '100'
+    display: How many incidents to mirror incoming each time
+    name: mirror_limit
+    type: 0
+    required: false
+
+  # Closure sync — close XSOAR incident when remote ticket closes
+  - additionalinfo: When selected, closing the remote ticket is mirrored in Cortex XSOAR.
+    defaultvalue: 'None'
+    display: Mirrored XSOAR Ticket closure method
+    name: close_incident
+    type: 15
+    options:
+    - None
+    - closed
+    - resolved
+    required: false
+
+  # Closure sync — close remote ticket when XSOAR incident closes
+  - additionalinfo: When selected, closing the XSOAR incident is mirrored in the remote system.
+    defaultvalue: 'false'
+    display: Close Mirrored Remote Ticket
+    name: close_ticket
+    type: 8
+    required: false
+
+
+# ── Mirror commands in the script.commands list ───────────────────────────────
+# These three commands must appear in `script.commands`. They have no custom
+# arguments or outputs — XSOAR calls them with a fixed contract.
+
+script:
+  ismappable: true
+  isremotesyncin: true
+  isremotesyncout: true
+  commands:
+
+  - name: get-remote-data
+    description: >
+      Gets remote data from a remote incident. Used by the mirroring engine to pull
+      updates into the XSOAR incident. Not intended for direct user invocation.
+    arguments:
+    - description: The remote incident ID.
+      name: id
+      required: true
+    - description: UTC timestamp of the last time this incident was updated in XSOAR.
+      name: lastUpdate
+
+  - name: update-remote-system
+    description: >
+      Pushes local XSOAR incident changes to the remote system. Called by the
+      mirroring engine when the incident is modified. Not intended for direct user invocation.
+
+  - name: get-modified-remote-data
+    description: >
+      Returns the list of remote incident IDs that were modified since the last
+      polling interval. Used by the mirroring engine to decide which incidents
+      need a get-remote-data call. Not intended for direct user invocation.
+    arguments:
+    - description: UTC timestamp of the last polling run.
+      name: lastUpdate
