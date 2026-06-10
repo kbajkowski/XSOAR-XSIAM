@@ -2,7 +2,7 @@
 
 ## Overview
 
-This integration connects XSOAR/XSIAM to the Cribl REST API (v4.18), enabling analysts and operators to monitor and manage Cribl Stream and Edge deployments directly from playbooks and the War Room. It covers system health, worker groups, worker nodes, pipelines, sources, destinations, jobs, lookup files, and system metrics.
+This integration connects XSOAR/XSIAM to the Cribl REST API (v4.18), enabling analysts and operators to monitor and manage Cribl Stream and Edge deployments directly from playbooks, scripts, or commands. It covers system health, worker groups, worker nodes, pipelines, sources, destinations, jobs, lookup files, and system metrics.
 
 ## Prerequisites
 
