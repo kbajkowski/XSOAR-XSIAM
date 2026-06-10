@@ -1,17 +1,5 @@
 # XSOAR/XSIAM Integration Coding Conventions
 
-## Required Imports
-
-```python
-import demistomock as demisto
-from CommonServerPython import *
-from CommonServerUserPython import *
-```
-
-Always import these three. Never import `requests` directly — use `BaseClient` which wraps it.
-
----
-
 ## Client Class
 
 Every integration has a `Client` class that extends `BaseClient`. This handles authentication, proxy, and SSL automatically.
