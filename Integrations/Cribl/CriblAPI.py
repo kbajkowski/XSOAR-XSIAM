@@ -1,10 +1,6 @@
 import json
 import time
 
-import demistomock as demisto  # noqa: F401
-from CommonServerPython import *  # noqa: F401
-from CommonServerUserPython import *  # noqa: F401
-
 VENDOR_NAME = 'CriblAPI'
 CRIBL_CLOUD_TOKEN_URL = 'https://login.cribl.cloud/oauth/token'
 CRIBL_CLOUD_AUDIENCE = 'https://api.cribl.cloud'
