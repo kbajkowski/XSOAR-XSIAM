@@ -221,6 +221,100 @@ script:
 
 ---
 
+## Event Collector Configuration (XSIAM)
+
+Event collectors fetch raw logs/events into an XSIAM dataset. They use `isfetchevents`
+(not `isfetch`), are XSIAM-only, and group their params into Connect/Collect sections:
+
+```yaml
+category: Analytics & SIEM
+sectionorder:
+- Connect
+- Collect
+commonfields:
+  id: VendorNameEventCollector
+  version: -1
+name: VendorNameEventCollector
+display: VendorName Event Collector
+description: Collects audit and authentication events from VendorName.
+configuration:
+- display: Server URL
+  name: url
+  type: 0
+  required: true
+  section: Connect
+- displaypassword: API Key
+  name: credentials
+  hiddenusername: true
+  type: 9
+  required: true
+  section: Connect
+- display: First fetch time
+  name: first_fetch
+  type: 0
+  defaultvalue: 3 days
+  required: false
+  section: Collect
+- display: Maximum number of events per fetch
+  name: max_events_per_fetch
+  type: 0
+  defaultvalue: '1000'
+  required: false
+  section: Collect
+- display: Trust any certificate (not secure)
+  name: insecure
+  type: 8
+  required: false
+  section: Connect
+  advanced: true
+- display: Use system proxy settings
+  name: proxy
+  type: 8
+  required: false
+  section: Connect
+  advanced: true
+script:
+  commands:
+  - name: vendorname-get-events
+    description: Manual command to fetch events and display them.
+    arguments:
+    - name: should_push_events
+      description: If true, the command will create events, otherwise it will only display them.
+      required: true
+      auto: PREDEFINED
+      predefined:
+      - 'true'
+      - 'false'
+      defaultValue: 'false'
+    - name: limit
+      description: Maximum number of results to return.
+      required: false
+    - name: from_date
+      description: Date from which to get events.
+      required: false
+  isfetchevents: true
+  runonce: false
+  script: ''
+  subtype: python3
+  type: python
+marketplaces:
+- marketplacev2
+- platform
+supportedModules:
+- xsiam
+fromversion: 6.8.0
+tests:
+- No tests
+```
+
+Notes:
+- `section: Connect` for connection/auth params, `section: Collect` for fetch-behavior params.
+- The get-events command has no `outputs` — events go to the dataset, not the context.
+- `fetch-events` and `test-module` are not declared in `commands`; `isfetchevents: true` enables them.
+- The dataset name is `<vendor>_<product>_raw`, taken from the `send_events_to_xsiam()` call in the code.
+
+---
+
 ## Complete Minimal Example
 
 ```yaml

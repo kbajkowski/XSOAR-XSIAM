@@ -241,6 +241,76 @@ elif command == 'fetch-incidents':
 
 ---
 
+## Fetch Events (XSIAM event collectors)
+
+If the integration is an event collector (`isfetchevents: true`), it pushes raw events into the
+XSIAM dataset `<vendor>_<product>_raw` instead of creating incidents:
+
+```python
+VENDOR = 'vendorname'
+PRODUCT = 'productname'
+DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
+
+def fetch_events(client: Client, last_run: dict, first_fetch_time: str,
+                 max_events_per_fetch: int) -> tuple[dict, list]:
+    last_fetch = last_run.get('last_fetch')
+    if not last_fetch:
+        last_fetch = arg_to_datetime(first_fetch_time).strftime(DATE_FORMAT)
+    previous_ids = set(last_run.get('ids', []))
+
+    events = client.search_events(since=last_fetch, limit=max_events_per_fetch)
+    # Drop events already sent in the previous fetch (boundary-timestamp duplicates)
+    events = [e for e in events if e.get('id') not in previous_ids]
+
+    if events:
+        last_fetch = events[-1]['created_time']  # events must be in ascending time order
+        ids = [e['id'] for e in events if e['created_time'] == last_fetch]
+    else:
+        ids = list(previous_ids)
+
+    next_run = {'last_fetch': last_fetch, 'ids': ids}
+    return next_run, events
+
+
+def add_time_to_events(events: list):
+    for event in events:
+        create_time = arg_to_datetime(arg=event.get('created_time'))
+        event['_time'] = create_time.strftime(DATE_FORMAT) if create_time else None
+```
+
+In `main()`:
+```python
+elif command == 'fetch-events':
+    next_run, events = fetch_events(
+        client=client,
+        last_run=demisto.getLastRun(),
+        first_fetch_time=params.get('first_fetch', '3 days'),
+        max_events_per_fetch=arg_to_number(params.get('max_events_per_fetch', 1000)),
+    )
+    add_time_to_events(events)
+    send_events_to_xsiam(events, vendor=VENDOR, product=PRODUCT)
+    demisto.setLastRun(next_run)
+
+elif command == 'vendorname-get-events':
+    should_push_events = argToBoolean(args.pop('should_push_events'))
+    events, results = get_events(client, args)
+    return_results(results)
+    if should_push_events:
+        add_time_to_events(events)
+        send_events_to_xsiam(events, vendor=VENDOR, product=PRODUCT)
+```
+
+Rules:
+- `send_events_to_xsiam()` is provided by CommonServerPython — never hand-roll the push.
+- Set `_time` on every event before sending; XSIAM uses it as the event timestamp.
+- Request events in ascending time order so the checkpoint is the last element.
+- On HTTP 429, send what was collected so far instead of failing the fetch.
+- No `CommandResults` context outputs for `fetch-events`; only the manual get-events
+  command returns readable output.
+
+---
+
 ## File Structure
 
 Every integration lives in its own directory:

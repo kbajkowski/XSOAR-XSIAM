@@ -1,6 +1,6 @@
 ---
 name: xsoar-xsiam-integration-builder
-description: Builds complete XSOAR/XSIAM integrations from API documentation. Generates Python code, YAML definition, and developer documentation following Cortex XSOAR conventions.
+description: Builds complete XSOAR/XSIAM integrations from API documentation. Generates Python code, YAML definition, and developer documentation following Cortex XSOAR conventions. Also builds XSIAM event collectors that fetch logs/events from third-party APIs into XSIAM datasets.
 ---
 
 # XSOAR/XSIAM Integration Builder
@@ -14,6 +14,7 @@ Invoke this skill when the user asks to:
 - "Integrate [VendorName] with XSOAR/XSIAM"
 - "Write an integration for [API]"
 - Convert an API spec or documentation into an XSOAR integration
+- Build an **event collector** — "fetch/ingest/collect [Vendor] logs or events into XSIAM", "pull audit logs into a dataset" (see Event Collector Mode below)
 
 Do NOT invoke for questions about XSOAR in general — only for active integration building.
 
@@ -30,6 +31,7 @@ At the start of every integration build, read these files to load conventions an
 5. Read `~/.claude/skills/xsoar-xsiam-integration-builder/examples/Pulsedive.py` — real marketplace integration: API key as query param, IP/Domain/URL reputation commands, Common.IP/Domain/URL indicators, DBotScore
 6. Read `~/.claude/skills/xsoar-xsiam-integration-builder/examples/Pulsedive.yml` — matching YAML for Pulsedive
 7. If the integration requires **mirroring** (bidirectional sync between XSOAR incidents and remote tickets): Read `~/.claude/skills/xsoar-xsiam-integration-builder/examples/ServiceNowV2_Mirroring.py` and `~/.claude/skills/xsoar-xsiam-integration-builder/examples/ServiceNowV2_Mirroring.yml` — extracted from ServiceNow v2, the canonical mirroring reference in the XSOAR marketplace
+8. If building an **event collector** (fetches logs/events into an XSIAM dataset): Read `~/.claude/skills/xsoar-xsiam-integration-builder/examples/HelloWorldEventCollector.py` and `~/.claude/skills/xsoar-xsiam-integration-builder/examples/HelloWorldEventCollector.yml` — the official Palo Alto template showing the canonical collector structure, and `~/.claude/skills/xsoar-xsiam-integration-builder/examples/OktaEventCollector.py` and `~/.claude/skills/xsoar-xsiam-integration-builder/examples/OktaEventCollector.yml` — a real-world collector with next-link pagination, ID-based deduplication, and 429 rate-limit handling
 
 These are production integrations pulled directly from the Demisto/XSOAR content repository. Use them as your structural and stylistic baseline. Do not deviate from the patterns shown unless the API requires it.
 
@@ -39,11 +41,12 @@ These are production integrations pulled directly from the Demisto/XSOAR content
 
 If the user has not already provided the following, ask before proceeding:
 
-1. **API documentation** — URL, pasted content, or uploaded file. You need: base URL, authentication method, available endpoints, request/response schemas.
-2. **Integration name** — The vendor name, used as the prefix for all commands (e.g., `vendorname-get-alert`).
-3. **Category** — Ask or infer from the API's purpose. See `yml-schema.md` for valid values.
-4. **Fetch incidents?** — Does the user want XSOAR to pull alerts/events as incidents automatically?
-5. **Commands to implement** — If the API has many endpoints, confirm which ones to include. Default: implement all read/GET operations plus the most commonly used write operations.
+1. **Integration type** — A regular integration (commands + optional incident fetching) or an **event collector** (pulls raw logs/events from the vendor API into an XSIAM dataset). If the user says "fetch/ingest logs or events into XSIAM", it is an event collector — follow Event Collector Mode below.
+2. **API documentation** — URL, pasted content, or uploaded file. You need: base URL, authentication method, available endpoints, request/response schemas.
+3. **Integration name** — The vendor name, used as the prefix for all commands (e.g., `vendorname-get-alert`).
+4. **Category** — Ask or infer from the API's purpose. See `yml-schema.md` for valid values. Event collectors are always `Analytics & SIEM`.
+5. **Fetch incidents?** — Does the user want XSOAR to pull alerts/events as incidents automatically? (Not applicable to event collectors — they always fetch events.)
+6. **Commands to implement** — If the API has many endpoints, confirm which ones to include. Default: implement all read/GET operations plus the most commonly used write operations. Event collectors implement only `test-module`, `fetch-events`, and `<vendor>-get-events`.
 
 If the user provides a URL for API documentation, use WebFetch to retrieve it before proceeding.
 
@@ -198,6 +201,69 @@ If the user wants bidirectional sync between XSOAR incidents and the remote syst
 
 ---
 
+## Event Collector Mode (XSIAM log/event ingestion)
+
+Use this mode when the goal is to pull raw logs/events from a third-party API into an **XSIAM dataset** (not to create incidents or run enrichment commands). Phases 1, 2, 5, and 6 still apply; this section replaces the Phase 3 and Phase 4 instructions. Read the HelloWorldEventCollector and OktaEventCollector example files listed in the reference materials before generating code.
+
+### Naming and scope
+- Integration ID/name: `<VendorName>EventCollector`; display name: `<Vendor> Event Collector`
+- Category is always `Analytics & SIEM`
+- Exactly three commands: `test-module`, `fetch-events`, and a manual `<vendor>-get-events` command. No enrichment commands, no incident fetching, no context outputs.
+- Events land in the XSIAM dataset `<vendor>_<product>_raw` — derived from the `VENDOR` and `PRODUCT` constants. Confirm these values with the user (lowercase, e.g., vendor `okta`, product `okta`).
+
+### Python structure (replaces Phase 3 structure)
+1. Constants: `VENDOR`, `PRODUCT`, `DATE_FORMAT`, page-size/fetch limits
+2. `Client(BaseClient)` — one method to query the events endpoint, supporting a start time, a limit, and the API's pagination token/next-link
+3. `test_module(...)` — performs a 1-event dry-run fetch; returns `'ok'`
+4. `get_events(...)` — used by the manual command; returns `(events, CommandResults)` with `tableToMarkdown` readable output
+5. `fetch_events(client, last_run, first_fetch_time, max_events_per_fetch)` — returns `(next_run, events)`
+6. `add_time_to_events(events)` — sets `event['_time']` from the event's creation timestamp (use `arg_to_datetime`); called before every send
+7. `main()` wiring:
+
+```python
+elif command == 'fetch-events':
+    last_run = demisto.getLastRun()
+    next_run, events = fetch_events(client, last_run, first_fetch_time, max_events_per_fetch)
+    add_time_to_events(events)
+    send_events_to_xsiam(events, vendor=VENDOR, product=PRODUCT)
+    demisto.setLastRun(next_run)
+
+elif command == '<vendor>-get-events':
+    should_push_events = argToBoolean(args.pop('should_push_events'))
+    events, results = get_events(client, args)
+    return_results(results)
+    if should_push_events:
+        add_time_to_events(events)
+        send_events_to_xsiam(events, vendor=VENDOR, product=PRODUCT)
+```
+
+### Fetch logic rules
+- `send_events_to_xsiam()` comes from CommonServerPython — never implement the HTTP push yourself.
+- **Checkpointing:** store the timestamp of the newest fetched event in `last_run` and query from it on the next run. On first run, fall back to the `first_fetch` / `after` config param (parse with `dateparser.parse` or `arg_to_datetime`).
+- **Deduplication:** if the API filter is inclusive of the boundary timestamp, also store the IDs of all events sharing the newest timestamp in `last_run` and drop those IDs from the next fetch (see `remove_duplicates` / `get_last_run` in OktaEventCollector.py).
+- **Pagination:** loop pages until `max_events_per_fetch` is reached or no more results; persist the next-page token/link in `last_run` if the fetch stops mid-stream.
+- **Rate limits:** on HTTP 429, return the events collected so far rather than failing; honor any rate-limit-reset header if the wait is short (see OktaEventCollector.py).
+- Sort/request events in ascending time order so checkpointing is correct.
+- Use `demisto.debug()` liberally — fetch counts, last_run contents, pagination decisions.
+- **OAuth note:** content-repo collectors for Microsoft/Graph-style APIs use `MicrosoftApiModule`/`SiemApiModule`, which are merged at build time in the demisto/content repo and are **not available to custom uploaded integrations**. For a client-credentials flow, implement the token request directly in `Client` (POST to the token endpoint, cache the token and its expiry in `demisto.getIntegrationContext()`).
+
+### YAML structure (replaces Phase 4 structure)
+- `script.isfetchevents: true` (instead of `isfetch`)
+- `marketplaces: [marketplacev2, platform]` and `supportedModules: [xsiam]` — collectors are XSIAM-only
+- `sectionorder: [Connect, Collect]` at top level; every configuration param gets a `section: Connect` (URL, auth, insecure, proxy) or `section: Collect` (first-fetch time, max events per fetch)
+- Standard Collect params: `max_events_per_fetch` (or `limit`) and a first-fetch param (e.g., `after`, type 15 with predefined ranges, or a free-text `first_fetch`)
+- The `<vendor>-get-events` command must define a required `should_push_events` boolean argument (`auto: PREDEFINED`, values 'true'/'false', default 'false') plus optional `limit`/`from_date` arguments. No `outputs`.
+- `fromversion: 6.8.0` or later (use `8.4.0` if unsure)
+- See the Event Collector section of `yml-schema.md` and both example `.yml` files for the exact shape
+
+### README additions
+In addition to the Phase 5 sections, document:
+- The target dataset name (`<vendor>_<product>_raw`)
+- How checkpointing works and what the first-fetch param controls
+- That `<vendor>-get-events` with `should_push_events=false` is the safe way to test without writing to the dataset
+
+---
+
 ## Phase 6: Embed Python Code into the YAML
 
 **This step is mandatory for every integration build.** XSOAR's upload-ready format is a single unified YAML file with the Python source embedded in `script.script` as a literal block scalar. Without this step the integration cannot be imported directly into XSOAR.
@@ -261,3 +327,10 @@ Before declaring the integration complete, verify:
 - [ ] `verify_certificate` correctly inverts the `insecure` param
 - [ ] README documents every command and all configuration parameters
 - [ ] **Phase 6 completed: Python code is embedded in `script.script` as an indented `|-` block scalar in the YAML**
+
+Event collectors only:
+- [ ] `script.isfetchevents: true`, `marketplaces: [marketplacev2, platform]`, `supportedModules: [xsiam]` are set
+- [ ] Every event is given a `_time` field before `send_events_to_xsiam()` is called
+- [ ] `last_run` checkpointing dedups events at the boundary timestamp (no duplicated or dropped events across fetches)
+- [ ] `<vendor>-get-events` has a required `should_push_events` argument and only pushes when it is true
+- [ ] README states the target dataset name (`<vendor>_<product>_raw`)

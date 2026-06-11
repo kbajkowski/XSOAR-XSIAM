@@ -2,6 +2,10 @@
 
 This skill gives Claude Code the ability to generate production-ready XSOAR/XSIAM integrations from an API spec or documentation. It handles Python code, YAML definition, README, and embedding the code into the deployment-ready unified YAML format.
 
+It can build two kinds of integrations:
+- **Regular integrations** — commands, enrichment, optional incident fetching, optional mirroring.
+- **XSIAM event collectors** — integrations that fetch logs/events from a third-party API into an XSIAM dataset (`<vendor>_<product>_raw`) via a `fetch-events` command. Just ask to "ingest [Vendor] logs into XSIAM".
+
 ---
 
 ## Directory Structure
@@ -13,8 +17,12 @@ xsoar-xsiam-integration-builder/
 ├── conventions.md                  ← XSOAR coding conventions reference
 ├── yml-schema.md                   ← YAML field and type code reference
 └── examples/
+    ├── HelloWorldEventCollector.py
+    ├── HelloWorldEventCollector.yml
     ├── MalwareBazaar.py
     ├── MalwareBazaar.yml
+    ├── OktaEventCollector.py
+    ├── OktaEventCollector.yml
     ├── Pulsedive.py
     ├── Pulsedive.yml
     ├── ServiceNowV2_Mirroring.py
