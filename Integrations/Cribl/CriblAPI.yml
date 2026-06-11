@@ -100,6 +100,123 @@ script:
       description: Server mode (e.g., primary, standby).
       type: String
 
+  - name: criblapi-list-master-groups
+    description: List all Worker Groups using the /master/groups legacy endpoint. Retained for compatibility with deployments that rely on this path.
+    arguments:
+    - name: fields
+      description: Comma-separated list of additional fields to include (e.g., git.commit, git.localChanges, git.log).
+      required: false
+    - name: product
+      description: Filter by Cribl product (stream, edge, outpost).
+      required: false
+    outputs:
+    - contextPath: CriblAPI.WorkerGroup.id
+      description: Unique identifier of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.name
+      description: Display name of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.description
+      description: Description of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.workerCount
+      description: Number of workers connected to the group.
+      type: Number
+    - contextPath: CriblAPI.WorkerGroup.configVersion
+      description: Current deployed configuration version.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.tags
+      description: Tags associated with the Worker Group.
+      type: String
+
+  - name: criblapi-get-master-group
+    description: Get details for a specific Worker Group using the /master/groups legacy endpoint.
+    arguments:
+    - name: id
+      description: The ID of the Worker Group to retrieve.
+      required: true
+    - name: fields
+      description: Comma-separated list of additional fields to include.
+      required: false
+    outputs:
+    - contextPath: CriblAPI.WorkerGroup.id
+      description: Unique identifier of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.name
+      description: Display name of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.description
+      description: Description of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.workerCount
+      description: Number of workers connected to the group.
+      type: Number
+    - contextPath: CriblAPI.WorkerGroup.configVersion
+      description: Current deployed configuration version.
+      type: String
+
+  - name: criblapi-update-master-group
+    description: Update configuration for a specific Worker Group using the /master/groups legacy endpoint.
+    arguments:
+    - name: id
+      description: The ID of the Worker Group to update.
+      required: true
+    - name: body
+      description: JSON string containing the fields to update on the Worker Group (e.g., {"description":"new desc"}).
+      required: true
+    outputs:
+    - contextPath: CriblAPI.WorkerGroup.id
+      description: Unique identifier of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.name
+      description: Display name of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.description
+      description: Updated description of the Worker Group.
+      type: String
+
+  - name: criblapi-delete-master-group
+    description: Delete a Worker Group using the /master/groups legacy endpoint.
+    arguments:
+    - name: id
+      description: The ID of the Worker Group to delete.
+      required: true
+    outputs:
+    - contextPath: CriblAPI.WorkerGroup.id
+      description: Unique identifier of the deleted Worker Group.
+      type: String
+
+  - name: criblapi-deploy-master-group
+    description: Deploy the latest committed configuration to a Worker Group using the /master/groups legacy endpoint.
+    arguments:
+    - name: id
+      description: The ID of the Worker Group to deploy configuration to.
+      required: true
+    outputs:
+    - contextPath: CriblAPI.WorkerGroup.id
+      description: Unique identifier of the Worker Group.
+      type: String
+    - contextPath: CriblAPI.WorkerGroup.configVersion
+      description: Configuration version after deployment.
+      type: String
+
+  - name: criblapi-get-master-group-config-version
+    description: Get the current deployed configuration version for a specific Worker Group.
+    arguments:
+    - name: id
+      description: The ID of the Worker Group.
+      required: true
+    outputs:
+    - contextPath: CriblAPI.WorkerGroupConfigVersion.id
+      description: Worker Group ID.
+      type: String
+    - contextPath: CriblAPI.WorkerGroupConfigVersion.version
+      description: Current deployed configuration version.
+      type: String
+    - contextPath: CriblAPI.WorkerGroupConfigVersion.commit
+      description: Git commit hash of the deployed configuration.
+      type: String
+
   - name: criblapi-list-worker-groups
     description: List all Worker Groups, Outpost Groups, or Edge Fleets for the specified Cribl product.
     arguments:
@@ -739,6 +856,10 @@ script:
   script: |-
     import json
     import time
+
+    import demistomock as demisto  # noqa: F401
+    from CommonServerPython import *  # noqa: F401
+    from CommonServerUserPython import *  # noqa: F401
 
     VENDOR_NAME = 'CriblAPI'
     CRIBL_CLOUD_TOKEN_URL = 'https://login.cribl.cloud/oauth/token'
