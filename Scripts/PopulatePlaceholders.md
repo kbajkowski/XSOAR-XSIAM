@@ -34,15 +34,15 @@ To configure this script properly, set up the following arguments in the script 
 | **`inputDict`** | *Conditional* | A JSON object (or JSON string) whose **values** are strings to process in bulk. Each key becomes a context key under the output prefix. <br>*Note: Takes precedence over `inputString` if both are provided.* |
 | **`matchObject`** | Optional | A JSON object (or JSON string) used as an additional lookup source. The object is recursively flattened and all keys are lowercased, enabling case-insensitive matching by bare key or dotted path. List items are addressable by index (e.g. `${results.0.name}`). |
 | **`object`** | Optional | A JSON object (or JSON string) referenced by `${object.<path>}` placeholders. |
-| **`key`** | Optional | The context output prefix. *(Default: `StringInterpolator`)* |
+| **`key`** | Optional | The context output prefix. *(Default: `PopulatePlaceholders`)* |
 | **`removeNotFound`** | Optional | If set to `yes`, placeholders that cannot be resolved are removed (replaced with an empty string). Otherwise unresolved placeholders are left intact in the output. *(Default: `no`)* |
 
 ## Outputs
 
 Results are written to Context Data under the prefix defined by the `key` argument, and a summary table is posted to the War Room.
 
-* **Single string mode (`inputString`):** the completed string is stored directly at the context path `<key>` (e.g. `StringInterpolator`).
-* **Dictionary mode (`inputDict`):** each completed value is stored at `<key>.<dictKey>` (e.g. `StringInterpolator.EmailBody`, `StringInterpolator.Subject`).
+* **Single string mode (`inputString`):** the completed string is stored directly at the context path `<key>` (e.g. `PopulatePlaceholders`).
+* **Dictionary mode (`inputDict`):** each completed value is stored at `<key>.<dictKey>` (e.g. `PopulatePlaceholders.EmailBody`, `PopulatePlaceholders.Subject`).
 
 If the input contains no `${...}` placeholders at all, nothing is written to context and the War Room shows a message noting that no placeholders were found and the script was skipped.
 
@@ -52,7 +52,7 @@ If the input contains no `${...}` placeholders at all, nothing is written to con
 ```
 inputString: Ticket ${incident.id} (${incident.severity}) was assigned to ${incident.owner}. IP: ${IP.Address}
 ```
-Result stored at `StringInterpolator`:
+Result stored at `PopulatePlaceholders`:
 ```
 Ticket 1234 (3) was assigned to kbajkowski. IP: 10.1.2.3
 ```
@@ -62,7 +62,7 @@ Ticket 1234 (3) was assigned to kbajkowski. IP: 10.1.2.3
 inputDict:   {"Subject": "Issue in ${Region}", "Body": "Server ${SQLResults.Hostname} is affected."}
 matchObject: {"SQLResults": {"Region": "ASIA", "Hostname": "db-prod-01"}}
 ```
-Results stored at `StringInterpolator.Subject` ("Issue in ASIA") and `StringInterpolator.Body` ("Server db-prod-01 is affected.").
+Results stored at `PopulatePlaceholders.Subject` ("Issue in ASIA") and `PopulatePlaceholders.Body` ("Server db-prod-01 is affected.").
 
 **Explicit object argument:**
 ```

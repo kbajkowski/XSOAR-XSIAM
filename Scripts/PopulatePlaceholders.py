@@ -130,7 +130,7 @@ def main():
     input_string = args.get('inputString', '')
     input_dict_arg = args.get('inputDict', '')
     match_object_arg = args.get('matchObject', '')
-    base_key = args.get('key', 'StringInterpolator')
+    base_key = args.get('key', 'PopulatePlaceholders')
     remove_not_found = args.get('removeNotFound', 'no')
 
     platform = demisto.demistoVersion().get('platform', '')
