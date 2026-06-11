@@ -62,7 +62,7 @@ Ticket 1234 (3) was assigned to kbajkowski. IP: 10.1.2.3
 inputDict:   {"Subject": "Issue in ${Region}", "Body": "Server ${SQLResults.Hostname} is affected."}
 matchObject: {"SQLResults": {"Region": "ASIA", "Hostname": "db-prod-01"}}
 ```
-Results stored at `PopulatePlaceholders.Subject` ("Issue in ASIA") and `PopulatePlaceholders.Body` ("Server db-prod-01 is affected.").
+Results stored at `PopulatePlaceholders.Subject` "Issue in ASIA" and `PopulatePlaceholders.Body` "Server db-prod-01 is affected.".
 
 **Explicit object argument:**
 ```
