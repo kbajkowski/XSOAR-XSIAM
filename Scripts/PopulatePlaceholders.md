@@ -69,6 +69,10 @@ Results stored at `PopulatePlaceholders.Subject` ("Issue in ASIA") and `Populate
 inputString: User ${object.user.name} logged in from ${object.src_ip}
 object:      {"user": {"name": "bob"}, "src_ip": "192.168.1.50"}
 ```
+Result stored at `PopulatePlaceholders`:
+```
+User bob logged in from 192.168.1.50
+```
 
 ## Nuances & Important Behavior
 
