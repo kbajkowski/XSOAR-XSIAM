@@ -1,0 +1,2921 @@
+category: Authentication & Identity Management
+commonfields:
+  id: Nudge
+  version: -1
+name: Nudge
+display: Nudge Security
+description: Discover, search, and manage your SaaS attack surface with Nudge Security - apps, accounts, OAuth grants, users, security findings, AI usage, browser extensions, and employee offboarding.
+configuration:
+- defaultvalue: https://api.nudgesecurity.io
+  display: Server URL
+  name: url
+  required: true
+  type: 0
+  additionalinfo: The base URL of the Nudge Security API.
+- displaypassword: API Token
+  hiddenusername: true
+  name: credentials
+  required: true
+  type: 9
+  additionalinfo: The Nudge Security API token, sent as a Bearer token.
+- display: Trust any certificate (not secure)
+  name: insecure
+  required: false
+  type: 8
+- display: Use system proxy settings
+  name: proxy
+  required: false
+  type: 8
+script:
+  commands:
+  - name: nudge-app-search
+    description: Searches for SaaS apps discovered by Nudge Security.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "name", "op": "ilike", "value": "%slack%"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, name, domain_canonical, account_count, adoption_percentage, first_date, fields, service_info.name, technical_contact_id, technical_contact.name, category, is_ignored.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - name
+      - domain_canonical
+      - account_count
+      - adoption_percentage
+      - first_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.App.id
+      description: Unique ID of the app.
+      type: Number
+    - contextPath: Nudge.App.name
+      description: Name of the app.
+      type: String
+    - contextPath: Nudge.App.domain_canonical
+      description: Canonical domain of the app.
+      type: String
+    - contextPath: Nudge.App.category
+      description: Category of the app.
+      type: String
+    - contextPath: Nudge.App.account_count
+      description: Number of accounts discovered for the app.
+      type: Number
+    - contextPath: Nudge.App.adoption_percentage
+      description: Percentage of accounts active in the last 90 days.
+      type: Number
+    - contextPath: Nudge.App.first_date
+      description: Date the app was first discovered.
+      type: Date
+    - contextPath: Nudge.App.is_ignored
+      description: Whether the app is marked as ignored in Nudge Security.
+      type: Boolean
+    - contextPath: Nudge.App.technical_contact_id
+      description: User ID of the app's technical contact.
+      type: Number
+    - contextPath: Nudge.App.counters.total_accounts
+      description: Total number of accounts for the app.
+      type: Number
+    - contextPath: Nudge.App.service_info
+      description: Vendor service information (name, description, category, status page).
+      type: Unknown
+    - contextPath: Nudge.App.fields
+      description: Custom fields set on the app.
+      type: Unknown
+    - contextPath: Nudge.App.labels
+      description: Labels set on the app.
+      type: Unknown
+  - name: nudge-app-supply-chain-search
+    description: Searches for apps in your SaaS supply chain by service category.
+    arguments:
+    - name: category
+      description: Service category to filter the supply chain by.
+      required: true
+      auto: PREDEFINED
+      predefined:
+      - Finance
+      - HR
+      - Marketing
+      - Sales
+      - Analytics
+      - Security
+      - Project Management
+      - Developer Tools
+      - IT & Infrastructure
+      - Communications
+      - Customer Management
+      - Collaboration
+      - Misc
+      - Design
+      - Dev Ops
+      - Productivity
+      - Social Media
+      - Legal
+      - File Sharing
+      - Public VPN
+      - Shopping
+      - Personal Finance
+      - Healthcare
+      - Dating
+      - Streaming
+      - Lifestyle
+      - Gaming
+      - Travel
+      - Education
+      - Government
+      - AI Tools
+      - Uncategorized
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "name", "op": "ilike", "value": "%slack%"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, name, domain_canonical, account_count, adoption_percentage, first_date, fields, service_info.name, technical_contact_id, technical_contact.name, category, is_ignored.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - name
+      - domain_canonical
+      - account_count
+      - adoption_percentage
+      - first_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.App.id
+      description: Unique ID of the app.
+      type: Number
+    - contextPath: Nudge.App.name
+      description: Name of the app.
+      type: String
+    - contextPath: Nudge.App.domain_canonical
+      description: Canonical domain of the app.
+      type: String
+    - contextPath: Nudge.App.category
+      description: Category of the app.
+      type: String
+    - contextPath: Nudge.App.account_count
+      description: Number of accounts discovered for the app.
+      type: Number
+    - contextPath: Nudge.App.adoption_percentage
+      description: Percentage of accounts active in the last 90 days.
+      type: Number
+    - contextPath: Nudge.App.first_date
+      description: Date the app was first discovered.
+      type: Date
+    - contextPath: Nudge.App.is_ignored
+      description: Whether the app is marked as ignored in Nudge Security.
+      type: Boolean
+    - contextPath: Nudge.App.service_info
+      description: Vendor service information (name, description, category, status page).
+      type: Unknown
+  - name: nudge-app-get
+    description: Retrieves a single SaaS app by its ID.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.App.id
+      description: Unique ID of the app.
+      type: Number
+    - contextPath: Nudge.App.name
+      description: Name of the app.
+      type: String
+    - contextPath: Nudge.App.domain_canonical
+      description: Canonical domain of the app.
+      type: String
+    - contextPath: Nudge.App.category
+      description: Category of the app.
+      type: String
+    - contextPath: Nudge.App.account_count
+      description: Number of accounts discovered for the app.
+      type: Number
+    - contextPath: Nudge.App.adoption_percentage
+      description: Percentage of accounts active in the last 90 days.
+      type: Number
+    - contextPath: Nudge.App.first_date
+      description: Date the app was first discovered.
+      type: Date
+    - contextPath: Nudge.App.is_ignored
+      description: Whether the app is marked as ignored in Nudge Security.
+      type: Boolean
+    - contextPath: Nudge.App.technical_contact_id
+      description: User ID of the app's technical contact.
+      type: Number
+    - contextPath: Nudge.App.counters.total_accounts
+      description: Total number of accounts for the app.
+      type: Number
+    - contextPath: Nudge.App.service_info
+      description: Vendor service information (name, description, category, status page).
+      type: Unknown
+    - contextPath: Nudge.App.fields
+      description: Custom fields set on the app.
+      type: Unknown
+    - contextPath: Nudge.App.labels
+      description: Labels set on the app.
+      type: Unknown
+  - name: nudge-app-category-set
+    description: Sets the category of an app.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app.
+      required: true
+    - name: category
+      description: The category to assign to the app.
+      required: true
+      auto: PREDEFINED
+      predefined:
+      - Finance
+      - HR
+      - Marketing
+      - Sales
+      - Analytics
+      - Security
+      - Project Management
+      - Developer Tools
+      - IT & Infrastructure
+      - Communications
+      - Customer Management
+      - Collaboration
+      - Misc
+      - Design
+      - Dev Ops
+      - Productivity
+      - Social Media
+      - Legal
+      - File Sharing
+      - Public VPN
+      - Shopping
+      - Personal Finance
+      - Healthcare
+      - Dating
+      - Streaming
+      - Lifestyle
+      - Gaming
+      - Travel
+      - Education
+      - Government
+      - AI Tools
+      - Uncategorized
+  - name: nudge-app-field-set
+    description: Sets the value of a custom field on an app.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app.
+      required: true
+    - name: field_id
+      description: The unique ID of the custom field.
+      required: true
+    - name: value
+      description: The value to set. For SELECT and MULTI_SELECT fields, the value must be one of the field's allowed values.
+      required: true
+    outputs:
+    - contextPath: Nudge.AppField.id
+      description: Unique ID of the field.
+      type: Number
+    - contextPath: Nudge.AppField.name
+      description: Name of the field.
+      type: String
+    - contextPath: Nudge.AppField.value
+      description: Value set on the app.
+      type: Unknown
+  - name: nudge-app-field-delete
+    description: Deletes a custom field value from an app.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app.
+      required: true
+    - name: field_id
+      description: The unique ID of the custom field.
+      required: true
+    - name: value
+      description: For MULTI_SELECT fields, the specific value to remove. If omitted, the field is cleared.
+  - name: nudge-app-label-add
+    description: Adds a label to an app.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app.
+      required: true
+    - name: value
+      description: The label value to add. The label must already exist (see nudge-label-create).
+      required: true
+  - name: nudge-app-label-delete
+    description: Deletes a label from an app.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app.
+      required: true
+    - name: value
+      description: The label value to delete from the app.
+      required: true
+  - name: nudge-app-instance-search
+    description: Searches for instances (tenants/workspaces) of a specific app.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app whose instances to search.
+      required: true
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - name
+      - domain_canonical
+      - first_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.AppInstance.id
+      description: Unique ID of the app instance.
+      type: Number
+    - contextPath: Nudge.AppInstance.name
+      description: Name of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.display_name
+      description: Display name of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.domain_canonical
+      description: Canonical domain of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.identifier
+      description: Identifier of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.external_id
+      description: External ID of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.connection_status
+      description: Connection status of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.sso_label
+      description: SSO label of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.first_date
+      description: Date the app instance was first discovered.
+      type: Date
+    - contextPath: Nudge.AppInstance.saas_id
+      description: ID of the app the instance belongs to.
+      type: Number
+    - contextPath: Nudge.AppInstance.technical_contact_id
+      description: User ID of the instance's technical contact.
+      type: Number
+  - name: nudge-app-technical-contact-set
+    description: Sets a user as the technical contact of an app.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app.
+      required: true
+    - name: user_id
+      description: The unique ID of the user to set as technical contact.
+      required: true
+  - name: nudge-app-technical-contact-delete
+    description: Removes the technical contact of an app.
+    arguments:
+    - name: app_id
+      description: The unique ID of the app.
+      required: true
+  - name: nudge-account-search
+    description: Searches for SaaS accounts discovered by Nudge Security.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "mfa_status", "op": "=", "value": "disabled"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, first_date, last_date, name, user_id, domain_canonical, mfa_status, fields, metadata.user_email, app_id, app.is_ignored.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - first_date
+      - last_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.Account.id
+      description: Unique ID of the account.
+      type: Number
+    - contextPath: Nudge.Account.name
+      description: Name of the account (usually the account email or username).
+      type: String
+    - contextPath: Nudge.Account.domain_canonical
+      description: Canonical domain of the app the account belongs to.
+      type: String
+    - contextPath: Nudge.Account.app_id
+      description: ID of the app the account belongs to.
+      type: Number
+    - contextPath: Nudge.Account.user_id
+      description: ID of the user who owns the account.
+      type: Number
+    - contextPath: Nudge.Account.mfa_status
+      description: MFA status of the account.
+      type: String
+    - contextPath: Nudge.Account.is_admin
+      description: Whether the account has admin privileges.
+      type: Boolean
+    - contextPath: Nudge.Account.first_account
+      description: Whether this was the first account discovered for the app.
+      type: Boolean
+    - contextPath: Nudge.Account.first_date
+      description: Date the account was first discovered.
+      type: Date
+    - contextPath: Nudge.Account.last_date
+      description: Date of the most recent account activity.
+      type: Date
+    - contextPath: Nudge.Account.last_billing_date
+      description: Date of the last billing event for the account.
+      type: Date
+    - contextPath: Nudge.Account.last_password_reset
+      description: Date of the last password reset for the account.
+      type: Date
+    - contextPath: Nudge.Account.discovery_info
+      description: How the account was discovered.
+      type: String
+    - contextPath: Nudge.Account.metadata.user_email
+      description: Email of the user who owns the account.
+      type: String
+    - contextPath: Nudge.Account.auth_methods
+      description: Authentication methods observed for the account.
+      type: Unknown
+    - contextPath: Nudge.Account.fields
+      description: Custom fields set on the account.
+      type: Unknown
+    - contextPath: Nudge.Account.labels
+      description: Labels set on the account.
+      type: Unknown
+  - name: nudge-account-get
+    description: Retrieves a single SaaS account by its ID.
+    arguments:
+    - name: account_id
+      description: The unique ID of the account to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.Account.id
+      description: Unique ID of the account.
+      type: Number
+    - contextPath: Nudge.Account.name
+      description: Name of the account (usually the account email or username).
+      type: String
+    - contextPath: Nudge.Account.domain_canonical
+      description: Canonical domain of the app the account belongs to.
+      type: String
+    - contextPath: Nudge.Account.app_id
+      description: ID of the app the account belongs to.
+      type: Number
+    - contextPath: Nudge.Account.user_id
+      description: ID of the user who owns the account.
+      type: Number
+    - contextPath: Nudge.Account.mfa_status
+      description: MFA status of the account.
+      type: String
+    - contextPath: Nudge.Account.is_admin
+      description: Whether the account has admin privileges.
+      type: Boolean
+    - contextPath: Nudge.Account.first_date
+      description: Date the account was first discovered.
+      type: Date
+    - contextPath: Nudge.Account.last_date
+      description: Date of the most recent account activity.
+      type: Date
+    - contextPath: Nudge.Account.metadata.user_email
+      description: Email of the user who owns the account.
+      type: String
+    - contextPath: Nudge.Account.auth_methods
+      description: Authentication methods observed for the account.
+      type: Unknown
+    - contextPath: Nudge.Account.fields
+      description: Custom fields set on the account.
+      type: Unknown
+    - contextPath: Nudge.Account.labels
+      description: Labels set on the account.
+      type: Unknown
+  - name: nudge-account-field-set
+    description: Sets the value of a custom field on an account.
+    arguments:
+    - name: account_id
+      description: The unique ID of the account.
+      required: true
+    - name: field_id
+      description: The unique ID of the custom field.
+      required: true
+    - name: value
+      description: The value to set. For SELECT and MULTI_SELECT fields, the value must be one of the field's allowed values.
+      required: true
+    outputs:
+    - contextPath: Nudge.AccountField.id
+      description: Unique ID of the field.
+      type: Number
+    - contextPath: Nudge.AccountField.name
+      description: Name of the field.
+      type: String
+    - contextPath: Nudge.AccountField.value
+      description: Value set on the account.
+      type: Unknown
+  - name: nudge-account-field-delete
+    description: Deletes a custom field value from an account.
+    arguments:
+    - name: account_id
+      description: The unique ID of the account.
+      required: true
+    - name: field_id
+      description: The unique ID of the custom field.
+      required: true
+    - name: value
+      description: For MULTI_SELECT fields, the specific value to remove. If omitted, the field is cleared.
+  - name: nudge-account-label-add
+    description: Adds a label to an account.
+    arguments:
+    - name: account_id
+      description: The unique ID of the account.
+      required: true
+    - name: value
+      description: The label value to add. The label must already exist (see nudge-label-create).
+      required: true
+  - name: nudge-account-label-delete
+    description: Deletes a label from an account.
+    arguments:
+    - name: account_id
+      description: The unique ID of the account.
+      required: true
+    - name: value
+      description: The label value to delete from the account.
+      required: true
+  - name: nudge-oauth-grant-search
+    description: Searches for OAuth grants discovered by Nudge Security.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "risk_level", "op": "=", "value": "high"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, first_seen, last_seen, risk_score, name, oauth_integration, risk_level, user_id, fields, access_type, parent_account_id, account_id, app.is_ignored, account_category, permissions, user_account_status, user_is_admin, org_unit_name.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - first_seen
+      - last_seen
+      - risk_score
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.OAuthGrant.id
+      description: Unique ID of the OAuth grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.name
+      description: Name of the application the grant was issued to.
+      type: String
+    - contextPath: Nudge.OAuthGrant.risk_level
+      description: Risk level of the OAuth grant.
+      type: String
+    - contextPath: Nudge.OAuthGrant.risk_score
+      description: Risk score of the OAuth grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.user_id
+      description: ID of the user who issued the grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.account_id
+      description: ID of the account associated with the grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.parent_account_id
+      description: ID of the parent account that authorized the grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.app_external_id
+      description: External ID of the application the grant was issued to.
+      type: String
+    - contextPath: Nudge.OAuthGrant.oauth_integration
+      description: Whether the grant is an app-to-app integration.
+      type: Boolean
+    - contextPath: Nudge.OAuthGrant.first_seen
+      description: Date the grant was first seen.
+      type: Date
+    - contextPath: Nudge.OAuthGrant.last_seen
+      description: Date the grant was last seen.
+      type: Date
+    - contextPath: Nudge.OAuthGrant.scopes
+      description: OAuth scopes included in the grant.
+      type: Unknown
+    - contextPath: Nudge.OAuthGrant.insights
+      description: Risk insights for the grant.
+      type: Unknown
+    - contextPath: Nudge.OAuthGrant.oauth_info
+      description: Additional OAuth information for the grant.
+      type: Unknown
+    - contextPath: Nudge.OAuthGrant.fields
+      description: Custom fields set on the grant.
+      type: Unknown
+    - contextPath: Nudge.OAuthGrant.labels
+      description: Labels set on the grant.
+      type: Unknown
+  - name: nudge-oauth-grant-get
+    description: Retrieves a single OAuth grant by its ID.
+    arguments:
+    - name: oauth_id
+      description: The unique ID of the OAuth grant to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.OAuthGrant.id
+      description: Unique ID of the OAuth grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.name
+      description: Name of the application the grant was issued to.
+      type: String
+    - contextPath: Nudge.OAuthGrant.risk_level
+      description: Risk level of the OAuth grant.
+      type: String
+    - contextPath: Nudge.OAuthGrant.risk_score
+      description: Risk score of the OAuth grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.user_id
+      description: ID of the user who issued the grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.account_id
+      description: ID of the account associated with the grant.
+      type: Number
+    - contextPath: Nudge.OAuthGrant.oauth_integration
+      description: Whether the grant is an app-to-app integration.
+      type: Boolean
+    - contextPath: Nudge.OAuthGrant.first_seen
+      description: Date the grant was first seen.
+      type: Date
+    - contextPath: Nudge.OAuthGrant.last_seen
+      description: Date the grant was last seen.
+      type: Date
+    - contextPath: Nudge.OAuthGrant.scopes
+      description: OAuth scopes included in the grant.
+      type: Unknown
+    - contextPath: Nudge.OAuthGrant.insights
+      description: Risk insights for the grant.
+      type: Unknown
+  - name: nudge-event-search
+    description: Searches for discovery and activity events recorded by Nudge Security.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "type", "op": "=", "value": "new_app"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, date, type, user_id, from_email, user_email, domain_canonical, account_id.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: start_date
+      description: Only return events on or after this date. Accepts ISO 8601 or relative dates such as "7 days ago".
+    - name: end_date
+      description: Only return events on or before this date. Accepts ISO 8601 or relative dates such as "1 day ago".
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - date
+      - type
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.Event.id
+      description: Unique ID of the event.
+      type: Number
+    - contextPath: Nudge.Event.event_id
+      description: External identifier of the event.
+      type: String
+    - contextPath: Nudge.Event.type
+      description: Type of the event.
+      type: String
+    - contextPath: Nudge.Event.date
+      description: Date the event occurred.
+      type: Date
+    - contextPath: Nudge.Event.user_id
+      description: ID of the user associated with the event.
+      type: Number
+    - contextPath: Nudge.Event.user_email
+      description: Email of the user associated with the event.
+      type: String
+    - contextPath: Nudge.Event.from_email
+      description: Sender email associated with the event.
+      type: String
+    - contextPath: Nudge.Event.domain_canonical
+      description: Canonical domain of the app associated with the event.
+      type: String
+    - contextPath: Nudge.Event.account_id
+      description: ID of the account associated with the event.
+      type: Number
+    - contextPath: Nudge.Event.plugin_id
+      description: ID of the plugin that generated the event.
+      type: String
+    - contextPath: Nudge.Event.resources
+      description: Resources attached to the event.
+      type: Unknown
+  - name: nudge-event-get
+    description: Retrieves a single event by its ID.
+    arguments:
+    - name: event_id
+      description: The unique ID of the event to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.Event.id
+      description: Unique ID of the event.
+      type: Number
+    - contextPath: Nudge.Event.event_id
+      description: External identifier of the event.
+      type: String
+    - contextPath: Nudge.Event.type
+      description: Type of the event.
+      type: String
+    - contextPath: Nudge.Event.date
+      description: Date the event occurred.
+      type: Date
+    - contextPath: Nudge.Event.user_id
+      description: ID of the user associated with the event.
+      type: Number
+    - contextPath: Nudge.Event.user_email
+      description: Email of the user associated with the event.
+      type: String
+    - contextPath: Nudge.Event.from_email
+      description: Sender email associated with the event.
+      type: String
+    - contextPath: Nudge.Event.domain_canonical
+      description: Canonical domain of the app associated with the event.
+      type: String
+    - contextPath: Nudge.Event.account_id
+      description: ID of the account associated with the event.
+      type: Number
+    - contextPath: Nudge.Event.resources
+      description: Resources attached to the event.
+      type: Unknown
+  - name: nudge-user-search
+    description: Searches for users (employees) known to Nudge Security.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "status", "op": "=", "value": "active"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, name, primary_email, external_user_id, status, user_email.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - name
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.User.id
+      description: Unique ID of the user.
+      type: Number
+    - contextPath: Nudge.User.name
+      description: Full name of the user.
+      type: String
+    - contextPath: Nudge.User.given_name
+      description: Given name of the user.
+      type: String
+    - contextPath: Nudge.User.family_name
+      description: Family name of the user.
+      type: String
+    - contextPath: Nudge.User.primary_email
+      description: Primary email of the user.
+      type: String
+    - contextPath: Nudge.User.status
+      description: Status of the user.
+      type: String
+    - contextPath: Nudge.User.is_admin
+      description: Whether the user is an admin.
+      type: Boolean
+    - contextPath: Nudge.User.is_delegated_admin
+      description: Whether the user is a delegated admin.
+      type: Boolean
+    - contextPath: Nudge.User.is_guest_user
+      description: Whether the user is a guest user.
+      type: Boolean
+    - contextPath: Nudge.User.has_2fa
+      description: Whether the user has two-factor authentication enabled.
+      type: Boolean
+    - contextPath: Nudge.User.creation_time
+      description: Date the user was created.
+      type: Date
+    - contextPath: Nudge.User.external_user_id
+      description: External ID of the user in the identity provider.
+      type: String
+    - contextPath: Nudge.User.last_password_change
+      description: Date of the user's last password change.
+      type: Date
+    - contextPath: Nudge.User.in_high_risk_country
+      description: Whether the user has recently been active in a high-risk country.
+      type: Boolean
+    - contextPath: Nudge.User.org_unit
+      description: Organizational unit of the user.
+      type: Unknown
+  - name: nudge-user-get
+    description: Retrieves a single user by their ID.
+    arguments:
+    - name: user_id
+      description: The unique ID of the user to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.User.id
+      description: Unique ID of the user.
+      type: Number
+    - contextPath: Nudge.User.name
+      description: Full name of the user.
+      type: String
+    - contextPath: Nudge.User.given_name
+      description: Given name of the user.
+      type: String
+    - contextPath: Nudge.User.family_name
+      description: Family name of the user.
+      type: String
+    - contextPath: Nudge.User.primary_email
+      description: Primary email of the user.
+      type: String
+    - contextPath: Nudge.User.status
+      description: Status of the user.
+      type: String
+    - contextPath: Nudge.User.is_admin
+      description: Whether the user is an admin.
+      type: Boolean
+    - contextPath: Nudge.User.has_2fa
+      description: Whether the user has two-factor authentication enabled.
+      type: Boolean
+    - contextPath: Nudge.User.creation_time
+      description: Date the user was created.
+      type: Date
+    - contextPath: Nudge.User.external_user_id
+      description: External ID of the user in the identity provider.
+      type: String
+    - contextPath: Nudge.User.last_password_change
+      description: Date of the user's last password change.
+      type: Date
+    - contextPath: Nudge.User.in_high_risk_country
+      description: Whether the user has recently been active in a high-risk country.
+      type: Boolean
+    - contextPath: Nudge.User.recovery_email
+      description: Recovery email of the user.
+      type: String
+    - contextPath: Nudge.User.recovery_phone
+      description: Recovery phone number of the user.
+      type: String
+    - contextPath: Nudge.User.org_unit
+      description: Organizational unit of the user.
+      type: Unknown
+  - name: nudge-group-search
+    description: Searches for user groups known to Nudge Security.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "risk_level_value", "op": ">=", "value": 3}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, risk_level_value, creation_date, external_id, counters.total_members, counters.total_saas_accounts, counters.total_apps_introduced, user_group_metadata.visibility, user_group_metadata.group_type, user_group_metadata.who_can_manage_members, user_group_metadata.who_can_join, user_group_metadata.who_can_view_messages, user_group_metadata.admin_created.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - risk_level_value
+      - creation_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.Group.id
+      description: Unique ID of the group.
+      type: Number
+    - contextPath: Nudge.Group.name
+      description: Name of the group.
+      type: String
+    - contextPath: Nudge.Group.external_id
+      description: External ID of the group in the identity provider.
+      type: String
+    - contextPath: Nudge.Group.description
+      description: Description of the group.
+      type: String
+    - contextPath: Nudge.Group.risk_level
+      description: Risk level of the group.
+      type: String
+    - contextPath: Nudge.Group.risk_level_value
+      description: Numeric risk level of the group.
+      type: Number
+    - contextPath: Nudge.Group.creation_date
+      description: Date the group was created.
+      type: Date
+    - contextPath: Nudge.Group.deleted_at
+      description: Date the group was deleted, if applicable.
+      type: Date
+    - contextPath: Nudge.Group.counters
+      description: Group counters (total members, SaaS accounts, apps introduced).
+      type: Unknown
+    - contextPath: Nudge.Group.user_group_metadata
+      description: Group metadata (visibility, type, membership policies).
+      type: Unknown
+  - name: nudge-group-get
+    description: Retrieves a single user group by its ID.
+    arguments:
+    - name: group_id
+      description: The unique ID of the group to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.Group.id
+      description: Unique ID of the group.
+      type: Number
+    - contextPath: Nudge.Group.name
+      description: Name of the group.
+      type: String
+    - contextPath: Nudge.Group.external_id
+      description: External ID of the group in the identity provider.
+      type: String
+    - contextPath: Nudge.Group.description
+      description: Description of the group.
+      type: String
+    - contextPath: Nudge.Group.risk_level
+      description: Risk level of the group.
+      type: String
+    - contextPath: Nudge.Group.risk_level_value
+      description: Numeric risk level of the group.
+      type: Number
+    - contextPath: Nudge.Group.creation_date
+      description: Date the group was created.
+      type: Date
+    - contextPath: Nudge.Group.counters
+      description: Group counters (total members, SaaS accounts, apps introduced).
+      type: Unknown
+    - contextPath: Nudge.Group.user_group_metadata
+      description: Group metadata (visibility, type, membership policies).
+      type: Unknown
+  - name: nudge-group-member-search
+    description: Searches for members of a specific user group.
+    arguments:
+    - name: group_id
+      description: The unique ID of the group whose members to search.
+      required: true
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "user.status", "op": "=", "value": "active"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, member_role, user.name, user.primary_email, user.external_user_id, user.status.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.GroupMember.id
+      description: Unique ID of the group membership.
+      type: Number
+    - contextPath: Nudge.GroupMember.member_role
+      description: Role of the member within the group.
+      type: String
+    - contextPath: Nudge.GroupMember.user
+      description: The user object of the group member.
+      type: Unknown
+  - name: nudge-notification-search
+    description: Searches for notifications generated by Nudge Security notification rules.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "status", "op": "=", "value": "open"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, creation_date, notification_rule_id, user_id, status, target_app_id, target_account_id, target_oauth_grant_id, target_aws_account_id, target_event_id, target_resource_id.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - creation_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.Notification.id
+      description: Unique ID of the notification.
+      type: Number
+    - contextPath: Nudge.Notification.summary
+      description: Summary of the notification.
+      type: String
+    - contextPath: Nudge.Notification.status
+      description: Status of the notification.
+      type: String
+    - contextPath: Nudge.Notification.creation_date
+      description: Date the notification was created.
+      type: Date
+    - contextPath: Nudge.Notification.target_app_id
+      description: ID of the app the notification refers to.
+      type: Number
+    - contextPath: Nudge.Notification.target_account_id
+      description: ID of the account the notification refers to.
+      type: Number
+    - contextPath: Nudge.Notification.target_aws_account_id
+      description: ID of the AWS account the notification refers to.
+      type: Number
+    - contextPath: Nudge.Notification.target_event_id
+      description: ID of the event the notification refers to.
+      type: Number
+    - contextPath: Nudge.Notification.target_oauth_grant_id
+      description: ID of the OAuth grant the notification refers to.
+      type: Number
+    - contextPath: Nudge.Notification.target_resource_id
+      description: ID of the resource the notification refers to.
+      type: Number
+  - name: nudge-notification-get
+    description: Retrieves a single notification by its ID, including its details.
+    arguments:
+    - name: notification_id
+      description: The unique ID of the notification to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.Notification.id
+      description: Unique ID of the notification.
+      type: Number
+    - contextPath: Nudge.Notification.summary
+      description: Summary of the notification.
+      type: String
+    - contextPath: Nudge.Notification.status
+      description: Status of the notification.
+      type: String
+    - contextPath: Nudge.Notification.creation_date
+      description: Date the notification was created.
+      type: Date
+    - contextPath: Nudge.Notification.details
+      description: Detailed content of the notification.
+      type: Unknown
+    - contextPath: Nudge.Notification.target_app_id
+      description: ID of the app the notification refers to.
+      type: Number
+    - contextPath: Nudge.Notification.target_account_id
+      description: ID of the account the notification refers to.
+      type: Number
+    - contextPath: Nudge.Notification.target_event_id
+      description: ID of the event the notification refers to.
+      type: Number
+    - contextPath: Nudge.Notification.target_oauth_grant_id
+      description: ID of the OAuth grant the notification refers to.
+      type: Number
+  - name: nudge-finding-search
+    description: Searches for security posture findings raised by Nudge Security.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "status", "op": "=", "value": "open"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, result, status, creation_time, last_check_time, resolution_time, reopen_time, description, finding_rule_id, app_integration_id, resource_id, resource_type, resource_type_name, default_resolution_owner_id, resolution_owner_id, risk_category.risk_category, severity.risk_severity.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - result
+      - status
+      - creation_time
+      - last_check_time
+      - resolution_time
+      - reopen_time
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.Finding.id
+      description: Unique ID of the finding.
+      type: Number
+    - contextPath: Nudge.Finding.status
+      description: Status of the finding.
+      type: String
+    - contextPath: Nudge.Finding.result
+      description: Result of the finding check.
+      type: String
+    - contextPath: Nudge.Finding.description
+      description: Description of the finding.
+      type: String
+    - contextPath: Nudge.Finding.creation_time
+      description: Date the finding was created.
+      type: Date
+    - contextPath: Nudge.Finding.last_check_time
+      description: Date the finding was last checked.
+      type: Date
+    - contextPath: Nudge.Finding.resolution_time
+      description: Date the finding was resolved, if applicable.
+      type: Date
+    - contextPath: Nudge.Finding.reopen_time
+      description: Date the finding was reopened, if applicable.
+      type: Date
+    - contextPath: Nudge.Finding.resource_id
+      description: ID of the resource the finding applies to.
+      type: Number
+    - contextPath: Nudge.Finding.resource_type
+      description: Type of the resource the finding applies to.
+      type: String
+    - contextPath: Nudge.Finding.resource_type_name
+      description: Display name of the resource type.
+      type: String
+    - contextPath: Nudge.Finding.app_integration_id
+      description: ID of the app integration the finding relates to.
+      type: Number
+    - contextPath: Nudge.Finding.finding_rule
+      description: The rule that produced the finding (name, severity, risk category).
+      type: Unknown
+    - contextPath: Nudge.Finding.resolution_owner
+      description: The user responsible for resolving the finding.
+      type: Unknown
+  - name: nudge-finding-get
+    description: Retrieves a single security finding by its ID.
+    arguments:
+    - name: finding_id
+      description: The unique ID of the finding to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.Finding.id
+      description: Unique ID of the finding.
+      type: Number
+    - contextPath: Nudge.Finding.status
+      description: Status of the finding.
+      type: String
+    - contextPath: Nudge.Finding.result
+      description: Result of the finding check.
+      type: String
+    - contextPath: Nudge.Finding.description
+      description: Description of the finding.
+      type: String
+    - contextPath: Nudge.Finding.creation_time
+      description: Date the finding was created.
+      type: Date
+    - contextPath: Nudge.Finding.last_check_time
+      description: Date the finding was last checked.
+      type: Date
+    - contextPath: Nudge.Finding.resolution_time
+      description: Date the finding was resolved, if applicable.
+      type: Date
+    - contextPath: Nudge.Finding.resource_id
+      description: ID of the resource the finding applies to.
+      type: Number
+    - contextPath: Nudge.Finding.resource_type
+      description: Type of the resource the finding applies to.
+      type: String
+    - contextPath: Nudge.Finding.resource_type_name
+      description: Display name of the resource type.
+      type: String
+    - contextPath: Nudge.Finding.finding_rule
+      description: The rule that produced the finding (name, severity, risk category).
+      type: Unknown
+    - contextPath: Nudge.Finding.resolution_owner
+      description: The user responsible for resolving the finding.
+      type: Unknown
+  - name: nudge-field-create
+    description: Creates a custom field that can be set on apps and/or accounts.
+    arguments:
+    - name: name
+      description: Name of the field.
+      required: true
+    - name: field_type
+      description: Type of the field.
+      required: true
+      auto: PREDEFINED
+      predefined:
+      - SELECT
+      - MULTI_SELECT
+      - DATE_TIME
+      - NUMERIC
+      - TEXT
+    - name: scopes
+      description: Comma-separated list of entity types the field can be set on. Possible values are app and account.
+      required: true
+      isArray: true
+      auto: PREDEFINED
+      predefined:
+      - app
+      - account
+    outputs:
+    - contextPath: Nudge.Field.id
+      description: Unique ID of the field.
+      type: Number
+    - contextPath: Nudge.Field.name
+      description: Name of the field.
+      type: String
+    - contextPath: Nudge.Field.field_type
+      description: Type of the field.
+      type: String
+    - contextPath: Nudge.Field.scopes
+      description: Entity types the field can be set on.
+      type: Unknown
+    - contextPath: Nudge.Field.system_defined
+      description: Whether the field is system defined.
+      type: Boolean
+    - contextPath: Nudge.Field.allowed_values
+      description: Allowed values of the field (for SELECT and MULTI_SELECT fields).
+      type: Unknown
+  - name: nudge-field-search
+    description: Searches for custom fields.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "field_type", "op": "=", "value": "SELECT"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, name, field_type, system_defined.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.Field.id
+      description: Unique ID of the field.
+      type: Number
+    - contextPath: Nudge.Field.name
+      description: Name of the field.
+      type: String
+    - contextPath: Nudge.Field.field_type
+      description: Type of the field.
+      type: String
+    - contextPath: Nudge.Field.scopes
+      description: Entity types the field can be set on.
+      type: Unknown
+    - contextPath: Nudge.Field.system_defined
+      description: Whether the field is system defined.
+      type: Boolean
+    - contextPath: Nudge.Field.allowed_values
+      description: Allowed values of the field (for SELECT and MULTI_SELECT fields).
+      type: Unknown
+  - name: nudge-field-get
+    description: Retrieves a single custom field by its ID.
+    arguments:
+    - name: field_id
+      description: The unique ID of the field to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.Field.id
+      description: Unique ID of the field.
+      type: Number
+    - contextPath: Nudge.Field.name
+      description: Name of the field.
+      type: String
+    - contextPath: Nudge.Field.field_type
+      description: Type of the field.
+      type: String
+    - contextPath: Nudge.Field.scopes
+      description: Entity types the field can be set on.
+      type: Unknown
+    - contextPath: Nudge.Field.system_defined
+      description: Whether the field is system defined.
+      type: Boolean
+    - contextPath: Nudge.Field.allowed_values
+      description: Allowed values of the field (for SELECT and MULTI_SELECT fields).
+      type: Unknown
+  - name: nudge-field-update
+    description: Updates the name and/or scopes of a custom field.
+    arguments:
+    - name: field_id
+      description: The unique ID of the field to update.
+      required: true
+    - name: name
+      description: New name for the field.
+    - name: scopes
+      description: Comma-separated list of entity types the field can be set on. Possible values are app and account.
+      isArray: true
+      auto: PREDEFINED
+      predefined:
+      - app
+      - account
+    outputs:
+    - contextPath: Nudge.Field.id
+      description: Unique ID of the field.
+      type: Number
+    - contextPath: Nudge.Field.name
+      description: Name of the field.
+      type: String
+    - contextPath: Nudge.Field.field_type
+      description: Type of the field.
+      type: String
+    - contextPath: Nudge.Field.scopes
+      description: Entity types the field can be set on.
+      type: Unknown
+  - name: nudge-field-delete
+    description: Deletes a custom field definition. This removes the field from all entities it is set on.
+    execution: true
+    arguments:
+    - name: field_id
+      description: The unique ID of the field to delete.
+      required: true
+  - name: nudge-field-allowed-value-add
+    description: Adds an allowed value to a SELECT or MULTI_SELECT custom field.
+    arguments:
+    - name: field_id
+      description: The unique ID of the field.
+      required: true
+    - name: value
+      description: The allowed value to add.
+      required: true
+    - name: color
+      description: Color of the value chip in the Nudge Security UI.
+    - name: background_color
+      description: Background color of the value chip in the Nudge Security UI.
+    - name: text_color
+      description: Text color of the value chip in the Nudge Security UI.
+    outputs:
+    - contextPath: Nudge.FieldAllowedValue.value
+      description: The allowed value.
+      type: String
+    - contextPath: Nudge.FieldAllowedValue.color
+      description: Color of the value chip.
+      type: String
+    - contextPath: Nudge.FieldAllowedValue.background_color
+      description: Background color of the value chip.
+      type: String
+    - contextPath: Nudge.FieldAllowedValue.text_color
+      description: Text color of the value chip.
+      type: String
+  - name: nudge-field-allowed-value-update
+    description: Updates an allowed value of a SELECT or MULTI_SELECT custom field.
+    arguments:
+    - name: field_id
+      description: The unique ID of the field.
+      required: true
+    - name: value
+      description: The existing allowed value to update.
+      required: true
+    - name: new_value
+      description: The new value to replace the existing one with.
+    - name: color
+      description: Color of the value chip in the Nudge Security UI.
+    - name: background_color
+      description: Background color of the value chip in the Nudge Security UI.
+    - name: text_color
+      description: Text color of the value chip in the Nudge Security UI.
+    outputs:
+    - contextPath: Nudge.FieldAllowedValue.value
+      description: The allowed value.
+      type: String
+    - contextPath: Nudge.FieldAllowedValue.color
+      description: Color of the value chip.
+      type: String
+    - contextPath: Nudge.FieldAllowedValue.background_color
+      description: Background color of the value chip.
+      type: String
+    - contextPath: Nudge.FieldAllowedValue.text_color
+      description: Text color of the value chip.
+      type: String
+  - name: nudge-field-allowed-value-delete
+    description: Deletes an allowed value from a SELECT or MULTI_SELECT custom field.
+    arguments:
+    - name: field_id
+      description: The unique ID of the field.
+      required: true
+    - name: value
+      description: The allowed value to delete.
+      required: true
+  - name: nudge-label-create
+    description: Creates a label that can be attached to apps, accounts, and OAuth grants.
+    arguments:
+    - name: value
+      description: The label value (name).
+      required: true
+    - name: color
+      description: Color of the label chip in the Nudge Security UI.
+    - name: background_color
+      description: Background color of the label chip in the Nudge Security UI.
+    - name: text_color
+      description: Text color of the label chip in the Nudge Security UI.
+    outputs:
+    - contextPath: Nudge.Label.value
+      description: The label value.
+      type: String
+    - contextPath: Nudge.Label.color
+      description: Color of the label chip.
+      type: String
+    - contextPath: Nudge.Label.system_defined
+      description: Whether the label is system defined.
+      type: Boolean
+  - name: nudge-label-update
+    description: Updates an existing label.
+    arguments:
+    - name: value
+      description: The existing label value to update.
+      required: true
+    - name: new_value
+      description: The new value to rename the label to.
+    - name: color
+      description: Color of the label chip in the Nudge Security UI.
+    - name: background_color
+      description: Background color of the label chip in the Nudge Security UI.
+    - name: text_color
+      description: Text color of the label chip in the Nudge Security UI.
+    outputs:
+    - contextPath: Nudge.Label.value
+      description: The label value.
+      type: String
+    - contextPath: Nudge.Label.color
+      description: Color of the label chip.
+      type: String
+    - contextPath: Nudge.Label.system_defined
+      description: Whether the label is system defined.
+      type: Boolean
+  - name: nudge-label-delete
+    description: Deletes a label. This removes the label from all entities it is attached to.
+    execution: true
+    arguments:
+    - name: value
+      description: The label value to delete.
+      required: true
+  - name: nudge-label-search
+    description: Searches for labels.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "value", "op": "ilike", "value": "%approved%"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: value.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - value
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.Label.value
+      description: The label value.
+      type: String
+    - contextPath: Nudge.Label.color
+      description: Color of the label chip.
+      type: String
+    - contextPath: Nudge.Label.system_defined
+      description: Whether the label is system defined.
+      type: Boolean
+  - name: nudge-app-integration-search
+    description: Searches for app-to-app integrations (machine identities) discovered by Nudge Security.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "risk_level", "op": "=", "value": "high"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, first_date, last_date, risk_score, name, risk_level, created_by_user_id, status, auth_type, sources, authorizing_app_id, app_id, instance.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - first_date
+      - last_date
+      - risk_score
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.AppIntegration.id
+      description: Unique ID of the app-to-app integration.
+      type: Number
+    - contextPath: Nudge.AppIntegration.name
+      description: Name of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.auth_type
+      description: Authentication type of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.auth_method_name
+      description: Authentication method name of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.status
+      description: Status of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.risk_level
+      description: Risk level of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.risk_score
+      description: Risk score of the integration.
+      type: Number
+    - contextPath: Nudge.AppIntegration.app_id
+      description: ID of the app the integration connects to.
+      type: Number
+    - contextPath: Nudge.AppIntegration.authorizing_app_id
+      description: ID of the app that authorized the integration.
+      type: Number
+    - contextPath: Nudge.AppIntegration.instance_id
+      description: ID of the app instance the integration belongs to.
+      type: Number
+    - contextPath: Nudge.AppIntegration.created_by_user_id
+      description: ID of the user who created the integration.
+      type: Number
+    - contextPath: Nudge.AppIntegration.mfa_status
+      description: MFA status of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.first_date
+      description: Date the integration was first seen.
+      type: Date
+    - contextPath: Nudge.AppIntegration.last_date
+      description: Date the integration was last seen.
+      type: Date
+    - contextPath: Nudge.AppIntegration.scopes
+      description: Access scopes of the integration.
+      type: Unknown
+    - contextPath: Nudge.AppIntegration.insights
+      description: Risk insights for the integration.
+      type: Unknown
+    - contextPath: Nudge.AppIntegration.sources
+      description: Sources where the integration was observed.
+      type: Unknown
+  - name: nudge-app-integration-get
+    description: Retrieves a single app-to-app integration by its authentication method ID.
+    arguments:
+    - name: auth_method_id
+      description: The unique ID of the app-to-app integration (authentication method) to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.AppIntegration.id
+      description: Unique ID of the app-to-app integration.
+      type: Number
+    - contextPath: Nudge.AppIntegration.name
+      description: Name of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.auth_type
+      description: Authentication type of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.auth_method_name
+      description: Authentication method name of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.status
+      description: Status of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.risk_level
+      description: Risk level of the integration.
+      type: String
+    - contextPath: Nudge.AppIntegration.risk_score
+      description: Risk score of the integration.
+      type: Number
+    - contextPath: Nudge.AppIntegration.app_id
+      description: ID of the app the integration connects to.
+      type: Number
+    - contextPath: Nudge.AppIntegration.authorizing_app_id
+      description: ID of the app that authorized the integration.
+      type: Number
+    - contextPath: Nudge.AppIntegration.first_date
+      description: Date the integration was first seen.
+      type: Date
+    - contextPath: Nudge.AppIntegration.last_date
+      description: Date the integration was last seen.
+      type: Date
+    - contextPath: Nudge.AppIntegration.scopes
+      description: Access scopes of the integration.
+      type: Unknown
+    - contextPath: Nudge.AppIntegration.insights
+      description: Risk insights for the integration.
+      type: Unknown
+  - name: nudge-instance-search
+    description: Searches for app instances (tenants/workspaces) across all apps.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "connection_status", "op": "=", "value": "connected"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, display_name, domain_canonical, first_date, identifier, name, sso_label, external_id, saas_id, origins, technical_contact_id, technical_contact_origin.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - display_name
+      - domain_canonical
+      - first_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.AppInstance.id
+      description: Unique ID of the app instance.
+      type: Number
+    - contextPath: Nudge.AppInstance.name
+      description: Name of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.display_name
+      description: Display name of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.domain_canonical
+      description: Canonical domain of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.identifier
+      description: Identifier of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.external_id
+      description: External ID of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.connection_status
+      description: Connection status of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.sso_label
+      description: SSO label of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.first_date
+      description: Date the app instance was first discovered.
+      type: Date
+    - contextPath: Nudge.AppInstance.app_id
+      description: ID of the app the instance belongs to.
+      type: Number
+    - contextPath: Nudge.AppInstance.technical_contact_id
+      description: User ID of the instance's technical contact.
+      type: Number
+    - contextPath: Nudge.AppInstance.counters
+      description: Instance counters (total users, total SaaS accounts).
+      type: Unknown
+  - name: nudge-instance-get
+    description: Retrieves a single app instance by its ID.
+    arguments:
+    - name: instance_id
+      description: The unique ID of the app instance to retrieve.
+      required: true
+    outputs:
+    - contextPath: Nudge.AppInstance.id
+      description: Unique ID of the app instance.
+      type: Number
+    - contextPath: Nudge.AppInstance.name
+      description: Name of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.display_name
+      description: Display name of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.domain_canonical
+      description: Canonical domain of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.identifier
+      description: Identifier of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.external_id
+      description: External ID of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.connection_status
+      description: Connection status of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.sso_label
+      description: SSO label of the app instance.
+      type: String
+    - contextPath: Nudge.AppInstance.first_date
+      description: Date the app instance was first discovered.
+      type: Date
+    - contextPath: Nudge.AppInstance.app_id
+      description: ID of the app the instance belongs to.
+      type: Number
+    - contextPath: Nudge.AppInstance.technical_contact_id
+      description: User ID of the instance's technical contact.
+      type: Number
+    - contextPath: Nudge.AppInstance.counters
+      description: Instance counters (total users, total SaaS accounts).
+      type: Unknown
+  - name: nudge-ai-session-search
+    description: Searches for AI tool usage sessions observed by Nudge Security. A date range is required by the API.
+    arguments:
+    - name: start_date
+      description: Only return sessions that started on or after this date. Accepts ISO 8601 or relative dates such as "7 days ago".
+      required: true
+    - name: end_date
+      description: Only return sessions that started on or before this date. Accepts ISO 8601 or relative dates such as "now".
+      required: true
+    - name: filters
+      description: 'JSON list of additional filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: start_date, finish_date, service_domain, user_id, saas_id, identifier, data_insight_categories, data_activity_types.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - start_date
+      - finish_date
+      - service_domain
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.AiSession.identifier
+      description: Unique identifier of the AI session.
+      type: String
+    - contextPath: Nudge.AiSession.user_id
+      description: ID of the user who ran the AI session.
+      type: Number
+    - contextPath: Nudge.AiSession.saas_id
+      description: ID of the AI app used in the session.
+      type: Number
+    - contextPath: Nudge.AiSession.service_domain
+      description: Domain of the AI service used in the session.
+      type: String
+    - contextPath: Nudge.AiSession.start_date
+      description: Date the session started.
+      type: Date
+    - contextPath: Nudge.AiSession.finish_date
+      description: Date the session finished.
+      type: Date
+    - contextPath: Nudge.AiSession.query_count
+      description: Number of prompts submitted in the session.
+      type: Number
+    - contextPath: Nudge.AiSession.data_insight_categories
+      description: Categories of data insights detected in the session.
+      type: Unknown
+    - contextPath: Nudge.AiSession.data_activity_types
+      description: Types of data activity detected in the session.
+      type: Unknown
+  - name: nudge-ai-prompt-search
+    description: Searches for individual AI prompts observed by Nudge Security. A date range is required by the API.
+    arguments:
+    - name: start_date
+      description: Only return prompts submitted on or after this date. Accepts ISO 8601 or relative dates such as "7 days ago".
+      required: true
+    - name: end_date
+      description: Only return prompts submitted on or before this date. Accepts ISO 8601 or relative dates such as "now".
+      required: true
+    - name: filters
+      description: 'JSON list of additional filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, submission_date, ai_session_start_date, user_id, ai_session_identifier, data_insight_categories, data_activity_types, data_insight_types, data_insight_subtypes.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - submission_date
+      - ai_session_start_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.AiPrompt.id
+      description: Unique ID of the AI prompt.
+      type: Number
+    - contextPath: Nudge.AiPrompt.user_id
+      description: ID of the user who submitted the prompt.
+      type: Number
+    - contextPath: Nudge.AiPrompt.prompt_query
+      description: Text of the prompt.
+      type: String
+    - contextPath: Nudge.AiPrompt.submission_date
+      description: Date the prompt was submitted.
+      type: Date
+    - contextPath: Nudge.AiPrompt.ai_session_identifier
+      description: Identifier of the AI session the prompt belongs to.
+      type: String
+    - contextPath: Nudge.AiPrompt.ai_session_start_date
+      description: Start date of the AI session the prompt belongs to.
+      type: Date
+    - contextPath: Nudge.AiPrompt.data_insight_categories
+      description: Categories of data insights detected in the prompt.
+      type: Unknown
+    - contextPath: Nudge.AiPrompt.data_activity_types
+      description: Types of data activity detected in the prompt.
+      type: Unknown
+  - name: nudge-browser-extension-client-search
+    description: Searches for devices/browsers running the Nudge Security browser extension.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "browser", "op": "=", "value": "Chrome"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, guid, last_heartbeat, version, registration_status, user_id, browser, browser_family, browser_version, os, os_family, os_version, device_identifier, device_type, device_os, hostname, extension_id, user_agent, storage_usage.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - guid
+      - last_heartbeat
+      - version
+      - registration_status
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.BrowserExtensionClient.id
+      description: Unique ID of the browser extension client.
+      type: Number
+    - contextPath: Nudge.BrowserExtensionClient.guid
+      description: GUID of the browser extension client.
+      type: String
+    - contextPath: Nudge.BrowserExtensionClient.hostname
+      description: Hostname of the device.
+      type: String
+    - contextPath: Nudge.BrowserExtensionClient.browser
+      description: Browser the extension is installed in.
+      type: String
+    - contextPath: Nudge.BrowserExtensionClient.browser_version
+      description: Version of the browser.
+      type: String
+    - contextPath: Nudge.BrowserExtensionClient.os
+      description: Operating system of the device.
+      type: String
+    - contextPath: Nudge.BrowserExtensionClient.user_id
+      description: ID of the user the client is registered to.
+      type: Number
+    - contextPath: Nudge.BrowserExtensionClient.registration_status
+      description: Registration status of the client.
+      type: String
+    - contextPath: Nudge.BrowserExtensionClient.last_heartbeat
+      description: Date of the last heartbeat from the client.
+      type: Date
+    - contextPath: Nudge.BrowserExtensionClient.device_identifier
+      description: Identifier of the device.
+      type: String
+    - contextPath: Nudge.BrowserExtensionClient.device_type
+      description: Type of the device.
+      type: String
+    - contextPath: Nudge.BrowserExtensionClient.version
+      description: Version of the Nudge Security browser extension.
+      type: String
+  - name: nudge-browser-extension-record-search
+    description: Searches for third-party browser extensions inventoried by the Nudge Security browser extension.
+    arguments:
+    - name: filters
+      description: 'JSON list of filter conditions combined with AND. Each condition is an object with "property", "op", and optional "value" keys, for example [{"property": "status", "op": "=", "value": "enabled"}]. Supported operators: =, !=, <, <=, >, >=, like, ilike, not_like, not_ilike, in, notin, notnull, isnull. Supported properties: id, status, deployment_type, first_date, last_date, version, browser_extension.identifier, browser_extension.browser.'
+    - name: search
+      description: JSON list of search conditions combined with OR. Uses the same format and properties as the filters argument.
+    - name: page
+      description: Page number to retrieve. Default is 1.
+    - name: per_page
+      description: Number of results per page. Maximum is 100.
+      defaultValue: '50'
+    - name: sort_by
+      description: Property to sort the results by.
+      auto: PREDEFINED
+      predefined:
+      - id
+      - status
+      - deployment_type
+      - first_date
+      - last_date
+    - name: sort_direction
+      description: Sort direction. Default is asc.
+      auto: PREDEFINED
+      predefined:
+      - asc
+      - desc
+    outputs:
+    - contextPath: Nudge.BrowserExtensionRecord.id
+      description: Unique ID of the browser extension record.
+      type: Number
+    - contextPath: Nudge.BrowserExtensionRecord.status
+      description: Status of the extension installation.
+      type: String
+    - contextPath: Nudge.BrowserExtensionRecord.version
+      description: Installed version of the extension.
+      type: String
+    - contextPath: Nudge.BrowserExtensionRecord.deployment_type
+      description: How the extension was deployed.
+      type: String
+    - contextPath: Nudge.BrowserExtensionRecord.first_date
+      description: Date the extension was first seen.
+      type: Date
+    - contextPath: Nudge.BrowserExtensionRecord.last_date
+      description: Date the extension was last seen.
+      type: Date
+    - contextPath: Nudge.BrowserExtensionRecord.browser_extension_client_id
+      description: ID of the browser extension client that reported the record.
+      type: Number
+    - contextPath: Nudge.BrowserExtensionRecord.browser_extension
+      description: Details of the third-party browser extension (name, vendor, store info, permissions disclosure).
+      type: Unknown
+    - contextPath: Nudge.BrowserExtensionRecord.permissions
+      description: Permissions requested by the extension.
+      type: Unknown
+    - contextPath: Nudge.BrowserExtensionRecord.host_permissions
+      description: Host permissions requested by the extension.
+      type: Unknown
+  - name: nudge-offboarding-start
+    description: Starts the Nudge Security offboarding playbook for a user. Returns a URL to track the offboarding progress.
+    execution: true
+    arguments:
+    - name: user_id
+      description: The unique ID of the user to offboard.
+      required: true
+    outputs:
+    - contextPath: Nudge.Offboarding.user_id
+      description: ID of the user being offboarded.
+      type: Number
+    - contextPath: Nudge.Offboarding.url
+      description: URL to track the offboarding progress in Nudge Security.
+      type: String
+  dockerimage: demisto/python3:3.12.13.10047619
+  runonce: false
+  script: |-
+    import json
+
+    import urllib3
+
+    urllib3.disable_warnings()
+
+    """ CONSTANTS """
+
+    DEFAULT_PER_PAGE = 50
+    DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+
+    APP_HEADERS = ["id", "name", "domain_canonical", "category", "account_count", "adoption_percentage", "first_date", "is_ignored"]
+    ACCOUNT_HEADERS = ["id", "name", "domain_canonical", "app_id", "user_id", "mfa_status", "is_admin", "first_date", "last_date"]
+    OAUTH_GRANT_HEADERS = ["id", "name", "risk_level", "risk_score", "user_id", "account_id", "oauth_integration", "first_seen", "last_seen"]
+    EVENT_HEADERS = ["id", "event_id", "type", "date", "user_email", "from_email", "domain_canonical", "account_id"]
+    USER_HEADERS = ["id", "name", "primary_email", "status", "is_admin", "has_2fa", "creation_time"]
+    GROUP_HEADERS = ["id", "name", "external_id", "description", "risk_level", "creation_date"]
+    GROUP_MEMBER_HEADERS = ["id", "member_role", "user"]
+    NOTIFICATION_HEADERS = ["id", "summary", "status", "creation_date", "target_app_id", "target_account_id", "target_event_id", "target_oauth_grant_id"]
+    FINDING_HEADERS = ["id", "status", "result", "description", "resource_type_name", "resource_id", "creation_time", "resolution_time"]
+    FIELD_HEADERS = ["id", "name", "field_type", "scopes", "system_defined", "allowed_values"]
+    LABEL_HEADERS = ["value", "color", "system_defined"]
+    INSTANCE_HEADERS = ["id", "name", "display_name", "domain_canonical", "identifier", "connection_status", "sso_label", "first_date"]
+    APP_INTEGRATION_HEADERS = ["id", "name", "auth_type", "auth_method_name", "risk_level", "risk_score", "status", "app_id", "first_date", "last_date"]
+    AI_SESSION_HEADERS = ["identifier", "user_id", "saas_id", "service_domain", "start_date", "finish_date", "query_count"]
+    AI_PROMPT_HEADERS = ["id", "user_id", "prompt_query", "submission_date", "ai_session_identifier"]
+    BROWSER_EXT_CLIENT_HEADERS = ["id", "guid", "hostname", "browser", "browser_version", "os", "user_id", "registration_status", "last_heartbeat"]
+    BROWSER_EXT_RECORD_HEADERS = ["id", "status", "version", "deployment_type", "first_date", "last_date", "browser_extension_client_id"]
+
+    """ CLIENT CLASS """
+
+
+    class Client(BaseClient):
+        def __init__(self, base_url: str, api_token: str, verify: bool, proxy: bool):
+            super().__init__(
+                base_url=base_url,
+                verify=verify,
+                proxy=proxy,
+                headers={"Authorization": f"Bearer {api_token}", "Content-Type": "application/json"},
+            )
+
+        # Apps
+        def search_apps(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/apps/search", json_data=body)
+
+        def search_apps_supply_chain(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/apps/search/supply_chain", json_data=body)
+
+        def get_app(self, app_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/apps/{app_id}")
+
+        def set_app_category(self, app_id: int, body: dict) -> dict:
+            return self._http_request("POST", url_suffix=f"/apps/app-category/{app_id}", json_data=body)
+
+        def set_app_field(self, app_id: int, field_id: int, body: dict) -> dict:
+            return self._http_request("POST", url_suffix=f"/apps/{app_id}/fields/{field_id}", json_data=body)
+
+        def delete_app_field(self, app_id: int, field_id: int, body: dict) -> dict:
+            return self._http_request("DELETE", url_suffix=f"/apps/{app_id}/fields/{field_id}", json_data=body)
+
+        def add_app_label(self, app_id: int, body: dict) -> dict:
+            return self._http_request("POST", url_suffix=f"/apps/{app_id}/labels", json_data=body)
+
+        def delete_app_label(self, app_id: int, body: dict) -> dict:
+            return self._http_request("DELETE", url_suffix=f"/apps/{app_id}/labels", json_data=body)
+
+        def search_app_instances(self, app_id: int, body: dict) -> dict:
+            return self._http_request("POST", url_suffix=f"/apps/{app_id}/instances/search", json_data=body)
+
+        def set_app_technical_contact(self, app_id: int, user_id: int) -> dict:
+            return self._http_request("POST", url_suffix=f"/apps/{app_id}/technical-contact/{user_id}")
+
+        def delete_app_technical_contact(self, app_id: int) -> dict:
+            return self._http_request("DELETE", url_suffix=f"/apps/{app_id}/technical-contact")
+
+        # Accounts
+        def search_accounts(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/accounts/search", json_data=body)
+
+        def get_account(self, account_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/accounts/{account_id}")
+
+        def set_account_field(self, account_id: int, field_id: int, body: dict) -> dict:
+            return self._http_request("POST", url_suffix=f"/accounts/{account_id}/fields/{field_id}", json_data=body)
+
+        def delete_account_field(self, account_id: int, field_id: int, body: dict) -> dict:
+            return self._http_request("DELETE", url_suffix=f"/accounts/{account_id}/fields/{field_id}", json_data=body)
+
+        def add_account_label(self, account_id: int, body: dict) -> dict:
+            return self._http_request("POST", url_suffix=f"/accounts/{account_id}/labels", json_data=body)
+
+        def delete_account_label(self, account_id: int, body: dict) -> dict:
+            return self._http_request("DELETE", url_suffix=f"/accounts/{account_id}/labels", json_data=body)
+
+        # OAuth grants
+        def search_oauth_grants(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/oauth/grants/search", json_data=body)
+
+        def get_oauth_grant(self, oauth_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/oauth/grants/{oauth_id}")
+
+        # Events
+        def search_events(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/events/search", json_data=body)
+
+        def get_event(self, event_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/events/{event_id}")
+
+        # Users
+        def search_users(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/users/search", json_data=body)
+
+        def get_user(self, user_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/users/{user_id}")
+
+        # Groups
+        def search_groups(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/groups/search", json_data=body)
+
+        def get_group(self, group_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/groups/{group_id}")
+
+        def search_group_members(self, group_id: int, body: dict) -> dict:
+            return self._http_request("POST", url_suffix=f"/groups/{group_id}/members/search", json_data=body)
+
+        # Notifications
+        def search_notifications(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/notifications/search", json_data=body)
+
+        def get_notification(self, notification_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/notifications/{notification_id}")
+
+        # Findings
+        def search_findings(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/findings/search", json_data=body)
+
+        def get_finding(self, finding_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/findings/{finding_id}")
+
+        # Fields
+        def create_field(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/fields", json_data=body)
+
+        def search_fields(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/fields/search", json_data=body)
+
+        def get_field(self, field_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/fields/{field_id}")
+
+        def update_field(self, field_id: int, body: dict) -> dict:
+            return self._http_request("PUT", url_suffix=f"/fields/{field_id}", json_data=body)
+
+        def delete_field(self, field_id: int) -> dict:
+            return self._http_request("DELETE", url_suffix=f"/fields/{field_id}")
+
+        def add_field_allowed_value(self, field_id: int, body: dict) -> dict:
+            return self._http_request("POST", url_suffix=f"/fields/{field_id}/allowed_values", json_data=body)
+
+        def update_field_allowed_value(self, field_id: int, body: dict) -> dict:
+            return self._http_request("PUT", url_suffix=f"/fields/{field_id}/allowed_values", json_data=body)
+
+        def delete_field_allowed_value(self, field_id: int, body: dict) -> dict:
+            return self._http_request("DELETE", url_suffix=f"/fields/{field_id}/allowed_values", json_data=body)
+
+        # Labels
+        def create_label(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/labels", json_data=body)
+
+        def update_label(self, body: dict) -> dict:
+            return self._http_request("PUT", url_suffix="/labels", json_data=body)
+
+        def delete_label(self, body: dict) -> dict:
+            return self._http_request("DELETE", url_suffix="/labels", json_data=body)
+
+        def search_labels(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/labels/search", json_data=body)
+
+        # App-to-app integrations
+        def search_app_integrations(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/app_to_app_integrations/other/search", json_data=body)
+
+        def get_app_integration(self, auth_method_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/app_to_app_integrations/{auth_method_id}")
+
+        # App instances (global)
+        def search_instances(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/instances/search", json_data=body)
+
+        def get_instance(self, instance_id: int) -> dict:
+            return self._http_request("GET", url_suffix=f"/instances/{instance_id}")
+
+        # AI activity
+        def search_ai_sessions(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/ai-sessions/search", json_data=body)
+
+        def search_ai_prompts(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/ai-prompts/search", json_data=body)
+
+        # Browser extension
+        def search_browser_extension_clients(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/browser-extension/clients/search", json_data=body)
+
+        def search_browser_extension_records(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/browser-extension/records/search", json_data=body)
+
+        # Playbooks
+        def start_offboarding(self, body: dict) -> dict:
+            return self._http_request("POST", url_suffix="/playbooks/offboarding", json_data=body)
+
+
+    """ HELPER FUNCTIONS """
+
+
+    def parse_conditions(value: str | None, arg_name: str) -> list | None:
+        """Parses a filters/search argument from a JSON string into a list of condition objects."""
+        if not value:
+            return None
+        try:
+            conditions = json.loads(value)
+        except json.JSONDecodeError as e:
+            raise DemistoException(
+                f'Failed to parse the "{arg_name}" argument as JSON: {e}. '
+                'Expected format: [{"property": "name", "op": "ilike", "value": "%slack%"}]'
+            )
+        if isinstance(conditions, dict):
+            conditions = [conditions]
+        if not isinstance(conditions, list):
+            raise DemistoException(f'The "{arg_name}" argument must be a JSON object or a list of JSON objects.')
+        return conditions
+
+
+    def build_search_body(args: dict) -> dict:
+        """Builds the common request body shared by all Nudge Security search endpoints."""
+        sorting = None
+        if sort_by := args.get("sort_by"):
+            sorting = {"property": sort_by, "direction": args.get("sort_direction") or "asc"}
+        return assign_params(
+            filters=parse_conditions(args.get("filters"), "filters"),
+            search=parse_conditions(args.get("search"), "search"),
+            page=arg_to_number(args.get("page"), arg_name="page"),
+            per_page=arg_to_number(args.get("per_page"), arg_name="per_page") or DEFAULT_PER_PAGE,
+            sorting=sorting,
+        )
+
+
+    def build_date_filters(property_name: str, args: dict) -> list:
+        """Builds range filter conditions on a date property from start_date/end_date arguments."""
+        conditions = []
+        if start_date := arg_to_datetime(args.get("start_date"), arg_name="start_date"):
+            conditions.append({"property": property_name, "op": ">=", "value": start_date.strftime(DATE_FORMAT)})
+        if end_date := arg_to_datetime(args.get("end_date"), arg_name="end_date"):
+            conditions.append({"property": property_name, "op": "<=", "value": end_date.strftime(DATE_FORMAT)})
+        return conditions
+
+
+    def page_search_results(
+        response: dict, title: str, outputs_prefix: str, key_field: str = "id", headers: list | None = None
+    ) -> CommandResults:
+        """Builds CommandResults from a paginated Nudge Security search response."""
+        values = response.get("values") or []
+        table_title = (
+            f"{title} (page {response.get('page')} of {response.get('total_pages')}, {response.get('total_values')} total)"
+        )
+        return CommandResults(
+            outputs_prefix=outputs_prefix,
+            outputs_key_field=key_field,
+            outputs=values,
+            readable_output=tableToMarkdown(
+                table_title, values, headers=headers, headerTransform=string_to_table_header, removeNull=True
+            ),
+            raw_response=response,
+        )
+
+
+    def single_entity_results(response: dict, title: str, outputs_prefix: str, key_field: str = "id") -> CommandResults:
+        """Builds CommandResults for a single entity returned by a get endpoint."""
+        return CommandResults(
+            outputs_prefix=outputs_prefix,
+            outputs_key_field=key_field,
+            outputs=response,
+            readable_output=tableToMarkdown(title, response, headerTransform=string_to_table_header, removeNull=True),
+            raw_response=response,
+        )
+
+
+    """ COMMAND FUNCTIONS """
+
+
+    def test_module(client: Client) -> str:
+        try:
+            client.search_users({"per_page": 1})
+        except DemistoException as e:
+            if "401" in str(e) or "Unauthorized" in str(e) or "Forbidden" in str(e):
+                return "Authorization Error: make sure the API Token is correctly set"
+            raise
+        return "ok"
+
+
+    # Apps
+
+
+    def app_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_apps(build_search_body(args))
+        return page_search_results(response, "Apps", "Nudge.App", headers=APP_HEADERS)
+
+
+    def app_supply_chain_search_command(client: Client, args: dict) -> CommandResults:
+        body = build_search_body(args)
+        body["category"] = args.get("category")
+        response = client.search_apps_supply_chain(body)
+        return page_search_results(response, f'Supply Chain Apps - {args.get("category")}', "Nudge.App", headers=APP_HEADERS)
+
+
+    def app_get_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        response = client.get_app(app_id)
+        return single_entity_results(response, f"App {app_id}", "Nudge.App")
+
+
+    def app_category_set_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        category = args.get("category")
+        response = client.set_app_category(app_id, {"category": category})
+        return CommandResults(
+            readable_output=f'Category of app {app_id} was set to "{category}".',
+            raw_response=response,
+        )
+
+
+    def app_field_set_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        value = args.get("value")
+        response = client.set_app_field(app_id, field_id, {"value": value})
+        return CommandResults(
+            outputs_prefix="Nudge.AppField",
+            outputs_key_field="id",
+            outputs=response,
+            readable_output=f'Field {field_id} on app {app_id} was set to "{value}".',
+            raw_response=response,
+        )
+
+
+    def app_field_delete_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        response = client.delete_app_field(app_id, field_id, assign_params(value=args.get("value")))
+        return CommandResults(
+            readable_output=f"Field {field_id} was deleted from app {app_id}.",
+            raw_response=response,
+        )
+
+
+    def app_label_add_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        value = args.get("value")
+        response = client.add_app_label(app_id, {"value": value})
+        return CommandResults(
+            readable_output=f'Label "{value}" was added to app {app_id}.',
+            raw_response=response,
+        )
+
+
+    def app_label_delete_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        value = args.get("value")
+        response = client.delete_app_label(app_id, {"value": value})
+        return CommandResults(
+            readable_output=f'Label "{value}" was deleted from app {app_id}.',
+            raw_response=response,
+        )
+
+
+    def app_instance_search_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        response = client.search_app_instances(app_id, build_search_body(args))
+        return page_search_results(response, f"Instances of App {app_id}", "Nudge.AppInstance", headers=INSTANCE_HEADERS)
+
+
+    def app_technical_contact_set_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        user_id = arg_to_number(args.get("user_id"), arg_name="user_id", required=True)
+        response = client.set_app_technical_contact(app_id, user_id)
+        return CommandResults(
+            readable_output=f"User {user_id} was set as the technical contact of app {app_id}.",
+            raw_response=response,
+        )
+
+
+    def app_technical_contact_delete_command(client: Client, args: dict) -> CommandResults:
+        app_id = arg_to_number(args.get("app_id"), arg_name="app_id", required=True)
+        response = client.delete_app_technical_contact(app_id)
+        return CommandResults(
+            readable_output=f"The technical contact of app {app_id} was removed.",
+            raw_response=response,
+        )
+
+
+    # Accounts
+
+
+    def account_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_accounts(build_search_body(args))
+        return page_search_results(response, "Accounts", "Nudge.Account", headers=ACCOUNT_HEADERS)
+
+
+    def account_get_command(client: Client, args: dict) -> CommandResults:
+        account_id = arg_to_number(args.get("account_id"), arg_name="account_id", required=True)
+        response = client.get_account(account_id)
+        return single_entity_results(response, f"Account {account_id}", "Nudge.Account")
+
+
+    def account_field_set_command(client: Client, args: dict) -> CommandResults:
+        account_id = arg_to_number(args.get("account_id"), arg_name="account_id", required=True)
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        value = args.get("value")
+        response = client.set_account_field(account_id, field_id, {"value": value})
+        return CommandResults(
+            outputs_prefix="Nudge.AccountField",
+            outputs_key_field="id",
+            outputs=response,
+            readable_output=f'Field {field_id} on account {account_id} was set to "{value}".',
+            raw_response=response,
+        )
+
+
+    def account_field_delete_command(client: Client, args: dict) -> CommandResults:
+        account_id = arg_to_number(args.get("account_id"), arg_name="account_id", required=True)
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        response = client.delete_account_field(account_id, field_id, assign_params(value=args.get("value")))
+        return CommandResults(
+            readable_output=f"Field {field_id} was deleted from account {account_id}.",
+            raw_response=response,
+        )
+
+
+    def account_label_add_command(client: Client, args: dict) -> CommandResults:
+        account_id = arg_to_number(args.get("account_id"), arg_name="account_id", required=True)
+        value = args.get("value")
+        response = client.add_account_label(account_id, {"value": value})
+        return CommandResults(
+            readable_output=f'Label "{value}" was added to account {account_id}.',
+            raw_response=response,
+        )
+
+
+    def account_label_delete_command(client: Client, args: dict) -> CommandResults:
+        account_id = arg_to_number(args.get("account_id"), arg_name="account_id", required=True)
+        value = args.get("value")
+        response = client.delete_account_label(account_id, {"value": value})
+        return CommandResults(
+            readable_output=f'Label "{value}" was deleted from account {account_id}.',
+            raw_response=response,
+        )
+
+
+    # OAuth grants
+
+
+    def oauth_grant_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_oauth_grants(build_search_body(args))
+        return page_search_results(response, "OAuth Grants", "Nudge.OAuthGrant", headers=OAUTH_GRANT_HEADERS)
+
+
+    def oauth_grant_get_command(client: Client, args: dict) -> CommandResults:
+        oauth_id = arg_to_number(args.get("oauth_id"), arg_name="oauth_id", required=True)
+        response = client.get_oauth_grant(oauth_id)
+        return single_entity_results(response, f"OAuth Grant {oauth_id}", "Nudge.OAuthGrant")
+
+
+    # Events
+
+
+    def event_search_command(client: Client, args: dict) -> CommandResults:
+        body = build_search_body(args)
+        if date_filters := build_date_filters("date", args):
+            body["filters"] = (body.get("filters") or []) + date_filters
+        response = client.search_events(body)
+        return page_search_results(response, "Events", "Nudge.Event", headers=EVENT_HEADERS)
+
+
+    def event_get_command(client: Client, args: dict) -> CommandResults:
+        event_id = arg_to_number(args.get("event_id"), arg_name="event_id", required=True)
+        response = client.get_event(event_id)
+        return single_entity_results(response, f"Event {event_id}", "Nudge.Event")
+
+
+    # Users
+
+
+    def user_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_users(build_search_body(args))
+        return page_search_results(response, "Users", "Nudge.User", headers=USER_HEADERS)
+
+
+    def user_get_command(client: Client, args: dict) -> CommandResults:
+        user_id = arg_to_number(args.get("user_id"), arg_name="user_id", required=True)
+        response = client.get_user(user_id)
+        return single_entity_results(response, f"User {user_id}", "Nudge.User")
+
+
+    # Groups
+
+
+    def group_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_groups(build_search_body(args))
+        return page_search_results(response, "Groups", "Nudge.Group", headers=GROUP_HEADERS)
+
+
+    def group_get_command(client: Client, args: dict) -> CommandResults:
+        group_id = arg_to_number(args.get("group_id"), arg_name="group_id", required=True)
+        response = client.get_group(group_id)
+        return single_entity_results(response, f"Group {group_id}", "Nudge.Group")
+
+
+    def group_member_search_command(client: Client, args: dict) -> CommandResults:
+        group_id = arg_to_number(args.get("group_id"), arg_name="group_id", required=True)
+        response = client.search_group_members(group_id, build_search_body(args))
+        return page_search_results(response, f"Members of Group {group_id}", "Nudge.GroupMember", headers=GROUP_MEMBER_HEADERS)
+
+
+    # Notifications
+
+
+    def notification_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_notifications(build_search_body(args))
+        return page_search_results(response, "Notifications", "Nudge.Notification", headers=NOTIFICATION_HEADERS)
+
+
+    def notification_get_command(client: Client, args: dict) -> CommandResults:
+        notification_id = arg_to_number(args.get("notification_id"), arg_name="notification_id", required=True)
+        response = client.get_notification(notification_id)
+        return single_entity_results(response, f"Notification {notification_id}", "Nudge.Notification")
+
+
+    # Findings
+
+
+    def finding_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_findings(build_search_body(args))
+        return page_search_results(response, "Findings", "Nudge.Finding", headers=FINDING_HEADERS)
+
+
+    def finding_get_command(client: Client, args: dict) -> CommandResults:
+        finding_id = arg_to_number(args.get("finding_id"), arg_name="finding_id", required=True)
+        response = client.get_finding(finding_id)
+        return single_entity_results(response, f"Finding {finding_id}", "Nudge.Finding")
+
+
+    # Fields
+
+
+    def field_create_command(client: Client, args: dict) -> CommandResults:
+        body = {
+            "name": args.get("name"),
+            "field_type": args.get("field_type"),
+            "scopes": argToList(args.get("scopes")),
+        }
+        response = client.create_field(body)
+        field = response.get("field") or {}
+        return CommandResults(
+            outputs_prefix="Nudge.Field",
+            outputs_key_field="id",
+            outputs=field,
+            readable_output=tableToMarkdown(
+                "Field Created", field, headers=FIELD_HEADERS, headerTransform=string_to_table_header, removeNull=True
+            ),
+            raw_response=response,
+        )
+
+
+    def field_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_fields(build_search_body(args))
+        return page_search_results(response, "Fields", "Nudge.Field", headers=FIELD_HEADERS)
+
+
+    def field_get_command(client: Client, args: dict) -> CommandResults:
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        response = client.get_field(field_id)
+        return single_entity_results(response, f"Field {field_id}", "Nudge.Field")
+
+
+    def field_update_command(client: Client, args: dict) -> CommandResults:
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        body = assign_params(
+            name=args.get("name"),
+            scopes=argToList(args.get("scopes")) or None,
+        )
+        response = client.update_field(field_id, body)
+        field = response.get("field") or {}
+        return CommandResults(
+            outputs_prefix="Nudge.Field",
+            outputs_key_field="id",
+            outputs=field,
+            readable_output=f"Field {field_id} was updated.",
+            raw_response=response,
+        )
+
+
+    def field_delete_command(client: Client, args: dict) -> CommandResults:
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        response = client.delete_field(field_id)
+        return CommandResults(
+            readable_output=f"Field {field_id} was deleted.",
+            raw_response=response,
+        )
+
+
+    def field_allowed_value_add_command(client: Client, args: dict) -> CommandResults:
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        body = assign_params(
+            value=args.get("value"),
+            color=args.get("color"),
+            background_color=args.get("background_color"),
+            text_color=args.get("text_color"),
+        )
+        response = client.add_field_allowed_value(field_id, body)
+        return CommandResults(
+            outputs_prefix="Nudge.FieldAllowedValue",
+            outputs_key_field="value",
+            outputs=response.get("allowed_value"),
+            readable_output=f'Allowed value "{args.get("value")}" was added to field {field_id}.',
+            raw_response=response,
+        )
+
+
+    def field_allowed_value_update_command(client: Client, args: dict) -> CommandResults:
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        body = assign_params(
+            value=args.get("value"),
+            new_value=args.get("new_value"),
+            color=args.get("color"),
+            background_color=args.get("background_color"),
+            text_color=args.get("text_color"),
+        )
+        response = client.update_field_allowed_value(field_id, body)
+        return CommandResults(
+            outputs_prefix="Nudge.FieldAllowedValue",
+            outputs_key_field="value",
+            outputs=response.get("allowed_value"),
+            readable_output=f'Allowed value "{args.get("value")}" of field {field_id} was updated.',
+            raw_response=response,
+        )
+
+
+    def field_allowed_value_delete_command(client: Client, args: dict) -> CommandResults:
+        field_id = arg_to_number(args.get("field_id"), arg_name="field_id", required=True)
+        value = args.get("value")
+        response = client.delete_field_allowed_value(field_id, {"value": value})
+        return CommandResults(
+            readable_output=f'Allowed value "{value}" was deleted from field {field_id}.',
+            raw_response=response,
+        )
+
+
+    # Labels
+
+
+    def label_create_command(client: Client, args: dict) -> CommandResults:
+        body = assign_params(
+            value=args.get("value"),
+            color=args.get("color"),
+            background_color=args.get("background_color"),
+            text_color=args.get("text_color"),
+        )
+        response = client.create_label(body)
+        return CommandResults(
+            outputs_prefix="Nudge.Label",
+            outputs_key_field="value",
+            outputs=response.get("label"),
+            readable_output=f'Label "{args.get("value")}" was created.',
+            raw_response=response,
+        )
+
+
+    def label_update_command(client: Client, args: dict) -> CommandResults:
+        body = assign_params(
+            value=args.get("value"),
+            new_value=args.get("new_value"),
+            color=args.get("color"),
+            background_color=args.get("background_color"),
+            text_color=args.get("text_color"),
+        )
+        response = client.update_label(body)
+        return CommandResults(
+            outputs_prefix="Nudge.Label",
+            outputs_key_field="value",
+            outputs=response.get("label"),
+            readable_output=f'Label "{args.get("value")}" was updated.',
+            raw_response=response,
+        )
+
+
+    def label_delete_command(client: Client, args: dict) -> CommandResults:
+        value = args.get("value")
+        response = client.delete_label({"value": value})
+        return CommandResults(
+            readable_output=f'Label "{value}" was deleted.',
+            raw_response=response,
+        )
+
+
+    def label_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_labels(build_search_body(args))
+        return page_search_results(response, "Labels", "Nudge.Label", key_field="value", headers=LABEL_HEADERS)
+
+
+    # App-to-app integrations
+
+
+    def app_integration_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_app_integrations(build_search_body(args))
+        return page_search_results(response, "App-to-App Integrations", "Nudge.AppIntegration", headers=APP_INTEGRATION_HEADERS)
+
+
+    def app_integration_get_command(client: Client, args: dict) -> CommandResults:
+        auth_method_id = arg_to_number(args.get("auth_method_id"), arg_name="auth_method_id", required=True)
+        response = client.get_app_integration(auth_method_id)
+        return single_entity_results(response, f"App-to-App Integration {auth_method_id}", "Nudge.AppIntegration")
+
+
+    # App instances (global)
+
+
+    def instance_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_instances(build_search_body(args))
+        return page_search_results(response, "App Instances", "Nudge.AppInstance", headers=INSTANCE_HEADERS)
+
+
+    def instance_get_command(client: Client, args: dict) -> CommandResults:
+        instance_id = arg_to_number(args.get("instance_id"), arg_name="instance_id", required=True)
+        response = client.get_instance(instance_id)
+        return single_entity_results(response, f"App Instance {instance_id}", "Nudge.AppInstance")
+
+
+    # AI activity
+
+
+    def ai_session_search_command(client: Client, args: dict) -> CommandResults:
+        body = build_search_body(args)
+        body["filters"] = (body.get("filters") or []) + build_date_filters("start_date", args)
+        response = client.search_ai_sessions(body)
+        return page_search_results(response, "AI Sessions", "Nudge.AiSession", key_field="identifier", headers=AI_SESSION_HEADERS)
+
+
+    def ai_prompt_search_command(client: Client, args: dict) -> CommandResults:
+        body = build_search_body(args)
+        body["filters"] = (body.get("filters") or []) + build_date_filters("submission_date", args)
+        response = client.search_ai_prompts(body)
+        return page_search_results(response, "AI Prompts", "Nudge.AiPrompt", headers=AI_PROMPT_HEADERS)
+
+
+    # Browser extension
+
+
+    def browser_extension_client_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_browser_extension_clients(build_search_body(args))
+        return page_search_results(
+            response, "Browser Extension Clients", "Nudge.BrowserExtensionClient", headers=BROWSER_EXT_CLIENT_HEADERS
+        )
+
+
+    def browser_extension_record_search_command(client: Client, args: dict) -> CommandResults:
+        response = client.search_browser_extension_records(build_search_body(args))
+        return page_search_results(
+            response, "Browser Extension Records", "Nudge.BrowserExtensionRecord", headers=BROWSER_EXT_RECORD_HEADERS
+        )
+
+
+    # Playbooks
+
+
+    def offboarding_start_command(client: Client, args: dict) -> CommandResults:
+        user_id = arg_to_number(args.get("user_id"), arg_name="user_id", required=True)
+        response = client.start_offboarding({"user_id": user_id})
+        outputs = {"user_id": user_id, "url": response.get("url")}
+        return CommandResults(
+            outputs_prefix="Nudge.Offboarding",
+            outputs_key_field="user_id",
+            outputs=outputs,
+            readable_output=f'Offboarding was started for user {user_id}. Track progress at: {response.get("url")}',
+            raw_response=response,
+        )
+
+
+    """ MAIN FUNCTION """
+
+
+    def main() -> None:
+        params = demisto.params()
+        args = demisto.args()
+        command = demisto.command()
+
+        base_url = params.get("url", "").rstrip("/") + "/api/1.0"
+        api_token = params.get("apikey") or (params.get("credentials") or {}).get("password", "")
+        verify_certificate = not params.get("insecure", False)
+        proxy = params.get("proxy", False)
+
+        demisto.debug(f"Command being called is {command}")
+
+        try:
+            if not api_token:
+                raise DemistoException("API Token is required. Please set it in the instance configuration.")
+
+            client = Client(
+                base_url=base_url,
+                api_token=api_token,
+                verify=verify_certificate,
+                proxy=proxy,
+            )
+
+            commands = {
+                "nudge-app-search": app_search_command,
+                "nudge-app-supply-chain-search": app_supply_chain_search_command,
+                "nudge-app-get": app_get_command,
+                "nudge-app-category-set": app_category_set_command,
+                "nudge-app-field-set": app_field_set_command,
+                "nudge-app-field-delete": app_field_delete_command,
+                "nudge-app-label-add": app_label_add_command,
+                "nudge-app-label-delete": app_label_delete_command,
+                "nudge-app-instance-search": app_instance_search_command,
+                "nudge-app-technical-contact-set": app_technical_contact_set_command,
+                "nudge-app-technical-contact-delete": app_technical_contact_delete_command,
+                "nudge-account-search": account_search_command,
+                "nudge-account-get": account_get_command,
+                "nudge-account-field-set": account_field_set_command,
+                "nudge-account-field-delete": account_field_delete_command,
+                "nudge-account-label-add": account_label_add_command,
+                "nudge-account-label-delete": account_label_delete_command,
+                "nudge-oauth-grant-search": oauth_grant_search_command,
+                "nudge-oauth-grant-get": oauth_grant_get_command,
+                "nudge-event-search": event_search_command,
+                "nudge-event-get": event_get_command,
+                "nudge-user-search": user_search_command,
+                "nudge-user-get": user_get_command,
+                "nudge-group-search": group_search_command,
+                "nudge-group-get": group_get_command,
+                "nudge-group-member-search": group_member_search_command,
+                "nudge-notification-search": notification_search_command,
+                "nudge-notification-get": notification_get_command,
+                "nudge-finding-search": finding_search_command,
+                "nudge-finding-get": finding_get_command,
+                "nudge-field-create": field_create_command,
+                "nudge-field-search": field_search_command,
+                "nudge-field-get": field_get_command,
+                "nudge-field-update": field_update_command,
+                "nudge-field-delete": field_delete_command,
+                "nudge-field-allowed-value-add": field_allowed_value_add_command,
+                "nudge-field-allowed-value-update": field_allowed_value_update_command,
+                "nudge-field-allowed-value-delete": field_allowed_value_delete_command,
+                "nudge-label-create": label_create_command,
+                "nudge-label-update": label_update_command,
+                "nudge-label-delete": label_delete_command,
+                "nudge-label-search": label_search_command,
+                "nudge-app-integration-search": app_integration_search_command,
+                "nudge-app-integration-get": app_integration_get_command,
+                "nudge-instance-search": instance_search_command,
+                "nudge-instance-get": instance_get_command,
+                "nudge-ai-session-search": ai_session_search_command,
+                "nudge-ai-prompt-search": ai_prompt_search_command,
+                "nudge-browser-extension-client-search": browser_extension_client_search_command,
+                "nudge-browser-extension-record-search": browser_extension_record_search_command,
+                "nudge-offboarding-start": offboarding_start_command,
+            }
+
+            if command == "test-module":
+                return_results(test_module(client))
+            elif command in commands:
+                return_results(commands[command](client, args))
+            else:
+                raise NotImplementedError(f"Command {command} is not implemented")
+
+        except Exception as e:
+            return_error(f"Failed to execute {command} command.\nError:\n{str(e)}")
+
+
+    """ ENTRY POINT """
+
+
+    if __name__ in ("__main__", "__builtin__", "builtins"):
+        main()
+  subtype: python3
+  type: python
+  feed: false
+  isfetch: false
+  longRunning: false
+fromversion: '6.0.0'
+tests:
+- No tests
