@@ -3,7 +3,7 @@ import json
 
 def get_label(incident: dict, path: str):
     """
-    Helper: Get specific label from incident/alert labels.
+    Helper: Get specific label from incident/issue labels.
     """
     parts = path.split('.')
     if len(parts) < 3:
@@ -83,16 +83,16 @@ def interpolate_string(text: str, incident: dict, inv_context: dict, platform: s
                 custom_field_path = path.replace('incident.', 'incident.CustomFields.', 1)
                 mapping[path] = demisto.dt({'incident': incident}, custom_field_path)
 
-        # Handle XSIAM Alert Labels
-        elif path.startswith('alert.labels.') and platform == XSIAM:
+        # Handle XSIAM Issue Labels
+        elif path.startswith('issue.labels.') and platform == XSIAM:
             mapping[path] = get_label(incident, path)
 
-        # Handle XSIAM Alert Fields (and Custom Fields fallback)
-        elif path.startswith('alert.') and platform == XSIAM:
-            mapping[path] = demisto.dt({'alert': incident}, path)
+        # Handle XSIAM Issue Fields (and Custom Fields fallback)
+        elif path.startswith('issue.') and platform == XSIAM:
+            mapping[path] = demisto.dt({'issue': incident}, path)
             if mapping[path] is None:
-                custom_field_path = path.replace('alert.', 'alert.CustomFields.', 1)
-                mapping[path] = demisto.dt({'alert': incident}, custom_field_path)
+                custom_field_path = path.replace('issue.', 'issue.CustomFields.', 1)
+                mapping[path] = demisto.dt({'issue': incident}, custom_field_path)
 
         # Handle explicit Object provided in args
         elif path.startswith('object.'):
