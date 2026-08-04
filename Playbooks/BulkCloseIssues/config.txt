@@ -1,0 +1,8 @@
+{
+	"query":"alert_domain:DOMAIN_SECURITY and -status:0 and name:Akamai",
+	"close_reason":"Resolved - Other",
+	"close_notes":"Bulk Closed as Part of Go-Live Cleanup",
+	"from_date":"365 days ago",
+	"limit":"500",
+	"babysit_mode":"yes"
+}
