@@ -1,5 +1,5 @@
 id: e00d5ed2-f8fc-427f-86ec-8e2f2b7d8c4e
-version: 27
+version: 29
 vcShouldKeepItemLegacyProdMachine: false
 aclrelations: []
 aclowner:
@@ -43,12 +43,12 @@ tasks:
     isautoswitchedtoquietmode: false
   "1":
     id: "1"
-    taskid: 8b50d86f-6e8d-4f71-96b0-edca7a7ba29d
+    taskid: 7f764670-8a5d-4c9e-89e5-92ec3cca682b
     type: regular
     task:
-      id: 8b50d86f-6e8d-4f71-96b0-edca7a7ba29d
+      id: 7f764670-8a5d-4c9e-89e5-92ec3cca682b
       version: -1
-      name: Get filtered Alerts
+      name: Get filtered Issues
       description: |-
         Searches Demisto alerts. A summarized version of this scrips is avilable with the summarizedversion argument.
 
@@ -160,12 +160,12 @@ tasks:
     isautoswitchedtoquietmode: false
   "8":
     id: "8"
-    taskid: 05b1f678-1138-4857-988a-b22bc7a13366
+    taskid: 2d40bee3-c8be-476a-8cba-c4f9c2f5a97f
     type: regular
     task:
-      id: 05b1f678-1138-4857-988a-b22bc7a13366
+      id: 2d40bee3-c8be-476a-8cba-c4f9c2f5a97f
       version: -1
-      name: Close alerts - Set Status of Resolved - Other
+      name: Close Issues
       description: commands.local.cmd.close.inv
       script: Builtin|||closeInvestigation
       type: regular
