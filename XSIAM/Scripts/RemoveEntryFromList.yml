@@ -1,0 +1,125 @@
+args:
+- name: json_data
+  required: true
+  supportedModules: []
+- name: threshold_date
+  required: true
+  supportedModules: []
+- name: date_key
+  supportedModules: []
+- name: context_output_key
+  supportedModules: []
+comment: "This script is used in the Approved Testing job to remove expired entries
+  from the Approved Testing list. \n\nIt takes a JSON object and threshold date as
+  inputs, checks whether any entries within the JSON object have expired based on
+  the threshold date, and returns the updated JSON object."
+commonfields:
+  id: 48a8d632-d648-41c5-8f80-f202cc0a609a
+  version: -1
+dockerimage: demisto/python3:3.12.13.10404775
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: Approved_Testing_Remove_Entry
+pswd: ""
+restrictioncenter: {}
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import json
+  import dateparser
+
+  def parse_to_datetime(date_str: str):
+      """
+      Parses a string into a timezone-aware datetime object for safe comparisons.
+      """
+      if not date_str:
+          return None
+      return dateparser.parse(date_str, settings={'TIMEZONE': 'UTC', 'RETURN_AS_TIMEZONE_AWARE': True})
+
+  def main():
+      args = demisto.args()
+
+      # Input arguments
+      json_input = args.get('json_data')
+      threshold_date_str = args.get('threshold_date')
+      date_key = args.get('date_key', 'expiry_date')
+      context_output_key = args.get('context_output_key', 'UpdatedJSONList')
+
+      # 1. Parse the JSON input
+      if isinstance(json_input, str):
+          try:
+              json_data = json.loads(json_input)
+          except json.JSONDecodeError as e:
+              return_error(f"Failed to parse json_data string into JSON: {str(e)}")
+      else:
+          json_data = json_input
+
+      if not isinstance(json_data, list):
+          return_error("Input json_data must be a list of dictionaries (JSON array).")
+
+      # 2. Parse the threshold date
+      threshold_date = parse_to_datetime(threshold_date_str)
+      if not threshold_date:
+          return_error(f"Could not parse the provided threshold_date: {threshold_date_str}")
+
+      updated_json = []
+      expired_found = False
+
+      # 3. Iterate through JSON objects and compare dates
+      for item in json_data:
+          item_date_str = item.get(date_key)
+
+          if not item_date_str:
+              updated_json.append(item)
+              continue
+
+          item_date = parse_to_datetime(item_date_str)
+
+          if item_date:
+              if item_date < threshold_date:
+                  expired_found = True
+                  demisto.debug(f"Expired entry removed. {date_key}: {item_date_str}")
+              else:
+                  updated_json.append(item)
+          else:
+              demisto.debug(f"Could not parse date '{item_date_str}' for item. Retaining item.")
+              updated_json.append(item)
+
+      # 4. Handle the scenario where ALL entries were removed
+      if expired_found and len(updated_json) == 0:
+          dummy_entry = {}
+
+          # Safely get keys from the original input to maintain structure
+          if len(json_data) > 0:
+              for key in json_data[0].keys():
+                  dummy_entry[key] = "N/A"  # You can change "N/A" to "" if you prefer empty strings
+          else:
+              # Fallback if the original list was somehow completely empty to begin with
+              dummy_entry = {"status": "empty"}
+
+          updated_json.append(dummy_entry)
+          readable_message = "All entries were expired and removed. Inserted dummy data to maintain JSON structure."
+
+      elif expired_found:
+          readable_message = f"Expired entries found and removed. Remaining active entries: {len(updated_json)}"
+
+      # 5. Return results
+      if not expired_found:
+          return_results("No expired entries found")
+      else:
+          command_results = CommandResults(
+              outputs_prefix=context_output_key,
+              outputs_key_field='',
+              outputs=updated_json,
+              readable_output=readable_message
+          )
+          return_results(command_results)
+
+  if __name__ in ('__main__', '__builtin__', 'builtins'):
+      main()
+scripttarget: 0
+signature: ""
+subtype: python3
+tags: []
+type: python
