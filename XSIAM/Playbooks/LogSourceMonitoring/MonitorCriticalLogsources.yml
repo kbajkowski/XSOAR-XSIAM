@@ -1,0 +1,803 @@
+id: 5ab3e608-664f-47bd-8ee7-8a65aff49a18
+version: 19
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ""
+  type: ""
+  name: ""
+name: Monitor_Critical_Log_Sources
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: a2adde65-6487-43ac-8ee4-91b3af9d5826
+    type: start
+    task:
+      id: a2adde65-6487-43ac-8ee4-91b3af9d5826
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "34"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": -1210
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "3":
+    id: "3"
+    taskid: 0b2d7cab-10a8-4c25-86f6-94af0f6fff18
+    type: title
+    task:
+      id: 0b2d7cab-10a8-4c25-86f6-94af0f6fff18
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 730,
+          "y": 775
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "16":
+    id: "16"
+    taskid: a606e189-2ba9-4700-90ee-f75f95d05670
+    type: condition
+    task:
+      id: a606e189-2ba9-4700-90ee-f75f95d05670
+      version: -1
+      name: What is the status of the log source?
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      Not Reporting:
+      - "19"
+      Reporting:
+      - "21"
+    separatecontext: false
+    conditions:
+    - label: Not Reporting
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: issue.sourcestatus
+            iscontext: true
+          right:
+            value:
+              simple: ALARM
+    - label: Reporting
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: issue.sourcestatus
+            iscontext: true
+          right:
+            value:
+              simple: OK
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": 225
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "19":
+    id: "19"
+    taskid: ac3aabdc-7d56-4ddc-8c51-a35b0dbcc2fd
+    type: playbook
+    task:
+      id: ac3aabdc-7d56-4ddc-8c51-a35b0dbcc2fd
+      version: -1
+      name: Create Notifications & SNOW Ticket for Failed Log Sources
+      description: Formerly Named - DP Create SNOW Ticket and Email Alerts for failed
+        Logsources
+      playbookName: ITDE_Create_Notifications_for_Failed_Log_Sources_1.1
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "25"
+    scriptarguments:
+      FailedLogSourceDetails:
+        complex:
+          root: FailedLogSourceDetails
+          transformers:
+          - operator: atIndex
+            args:
+              index:
+                value:
+                  simple: "0"
+    separatecontext: false
+    continueonerrortype: ""
+    loop:
+      iscommand: false
+      exitCondition: ""
+      wait: 1
+      max: 100
+    view: |-
+      {
+        "position": {
+          "x": 1010,
+          "y": 395
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "21":
+    id: "21"
+    taskid: dedf91d0-20a3-4859-8f23-fdf2beb5105d
+    type: playbook
+    task:
+      id: dedf91d0-20a3-4859-8f23-fdf2beb5105d
+      version: -1
+      name: Close SNOW Ticket for Failed Log Sources
+      playbookName: ITDE_Close_SNOW_Ticket_1.1
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "25"
+    scriptarguments:
+      LogSourceDetails:
+        complex:
+          root: FailedLogSourceDetails
+          transformers:
+          - operator: atIndex
+            args:
+              index:
+                value:
+                  simple: "0"
+    separatecontext: false
+    continueonerrortype: ""
+    loop:
+      iscommand: false
+      exitCondition: ""
+      wait: 1
+      max: 100
+    view: |-
+      {
+        "position": {
+          "x": 510,
+          "y": 395
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "24":
+    id: "24"
+    taskid: 84e77bca-ab1e-4b26-8717-bed00c70c93f
+    type: regular
+    task:
+      id: 84e77bca-ab1e-4b26-8717-bed00c70c93f
+      version: -1
+      name: Load Log Source Details into Context (From Lookup)
+      description: |-
+        Execute an XQL query and retrieve results of an executed XQL query API. The command will be executed every 10 seconds until results are retrieved or until a timeout error is raised.
+        When more than 1000 results are retrieved, the command will return a compressed gzipped JSON format file,
+        unless the argument 'parse_result_file_to_context' is set to true and then the results will be extracted to the context.
+      script: XQL Query Engine|||xdr-xql-generic-query
+      type: regular
+      iscommand: true
+      brand: XQL Query Engine
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "28"
+      '#none#':
+      - "42"
+    scriptarguments:
+      extend-context:
+        simple: FailedLogSourceDetails=results
+      interval_in_seconds:
+        simple: "15"
+      parse_result_file_to_context:
+        simple: "false"
+      query:
+        simple: dataset = critical_logsources | filter logsourcename = "${issue.logsource}"
+          and alertsource = "${issue.detectionsource}"
+      query_name:
+        simple: Cribl Log Source Monitoring - Lookup Dataset
+      retry-count:
+        simple: "5"
+      retry-interval:
+        simple: "120"
+      timeout_in_seconds:
+        simple: "600"
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": -755
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "25":
+    id: "25"
+    taskid: 1066ccb8-f25a-4a13-b49b-60a80776d69e
+    type: regular
+    task:
+      id: 1066ccb8-f25a-4a13-b49b-60a80776d69e
+      version: -1
+      name: Close Issue
+      description: commands.local.cmd.close.inv
+      script: Builtin|||closeInvestigation
+      type: regular
+      iscommand: true
+      brand: Builtin
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "28"
+      '#none#':
+      - "3"
+    scriptarguments:
+      closeNotes:
+        simple: ${ClosingDetails}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 730,
+          "y": 590
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "26":
+    id: "26"
+    taskid: 2cb4ba96-fdaa-4a5a-b47c-dfd21a11580b
+    type: condition
+    task:
+      id: 2cb4ba96-fdaa-4a5a-b47c-dfd21a11580b
+      version: -1
+      name: Was log source found in Lookup?
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "35"
+      "yes":
+      - "39"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isNotEmpty
+          left:
+            value:
+              simple: FailedLogSourceDetails
+            iscontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": -470
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "28":
+    id: "28"
+    taskid: 138762a1-ffca-4b32-a745-ed73bdef3560
+    type: playbook
+    task:
+      id: 138762a1-ffca-4b32-a745-ed73bdef3560
+      version: -1
+      name: Error Handling SubPlaybook
+      playbookName: Error Handling SubPlaybook
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    scriptarguments:
+      EmailAddress:
+        simple: kbajkowski@paloaltonetworks.com
+      NotificationType:
+        simple: email
+    separatecontext: true
+    continueonerrortype: ""
+    loop:
+      iscommand: false
+      exitCondition: ""
+      wait: 1
+      max: 100
+    view: |-
+      {
+        "position": {
+          "x": 1510,
+          "y": 110
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "34":
+    id: "34"
+    taskid: e92df608-509c-498a-8890-5f5307268a88
+    type: title
+    task:
+      id: e92df608-509c-498a-8890-5f5307268a88
+      version: -1
+      name: Gather Metadata About Log Source
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "41"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": -1030
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "35":
+    id: "35"
+    taskid: e622abc0-211a-4ddd-8eb9-273a45b46964
+    type: title
+    task:
+      id: e622abc0-211a-4ddd-8eb9-273a45b46964
+      version: -1
+      name: Add Missing Data Source to Lookup
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "36"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 180,
+          "y": -200
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "36":
+    id: "36"
+    taskid: c183fba1-9c38-4ae6-9231-3e63c2e30501
+    type: regular
+    task:
+      id: c183fba1-9c38-4ae6-9231-3e63c2e30501
+      version: -1
+      name: Add Data Source to Lookup
+      description: send HTTP POST request.
+      script: '|||core-api-post'
+      type: regular
+      iscommand: true
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "28"
+      '#none#':
+      - "37"
+    scriptarguments:
+      body:
+        simple: '{"request_data": {"dataset_name": "critical_logsources","data":[{"logsourcename":"${issue.logsource}","logsourcetype":"${issue.logsource}","servicenowcategory":"Application","servicenowsubcategory":"Error
+          Message","configurationitem":"Generic CI","firstalertedat":${issue.externalstarttime},"isalerttriggered":"FALSE","snowticketnum":"","alertsource":"${issue.detectionsource}","threshold":"6","ismonitored":"TRUE"}]}}'
+      retry-count:
+        simple: "5"
+      retry-interval:
+        simple: "120"
+      uri:
+        simple: /public_api/v1/xql/lookups/add_data
+      using:
+        complex:
+          root: lists
+          accessor: ITDE_Log_Source_Monitoring_Config
+          transformers:
+          - operator: getField
+            args:
+              field:
+                value:
+                  simple: core_rest_api_instance
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 180,
+          "y": -95
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "37":
+    id: "37"
+    taskid: 577bff3d-e43a-4dd6-a1ec-fca600e00cf2
+    type: regular
+    task:
+      id: 577bff3d-e43a-4dd6-a1ec-fca600e00cf2
+      version: -1
+      name: Set To Context
+      description: Set a value in context under the key you entered.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "38"
+    scriptarguments:
+      key:
+        simple: FailedLogSourceDetails
+      value:
+        simple: '{"LogSourceName":"${issue.logsource}","LogSourceType":"${issue.logsource}","ServiceNowCategory":"Application","ServiceNowSubcategory":"Error
+          Message","ConfigurationItem":"Generic CI","FirstAlertedAt":${issue.externalstarttime},"IsAlertTriggered":"FALSE","SNOWTicketNum":"","AlertSource":"${issue.detectionsource}","Threshold":"6","IsMonitored":"TRUE"}'
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 180,
+          "y": 35
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "38":
+    id: "38"
+    taskid: ca85b843-5292-431a-a17e-8d10c9f565fd
+    type: title
+    task:
+      id: ca85b843-5292-431a-a17e-8d10c9f565fd
+      version: -1
+      name: Handle Notification
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "16"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": 117.5
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "39":
+    id: "39"
+    taskid: f9d887c0-fb46-4f4c-ab84-129024898896
+    type: condition
+    task:
+      id: f9d887c0-fb46-4f4c-ab84-129024898896
+      version: -1
+      name: Is Log Source Monitored?
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "40"
+      "yes":
+      - "16"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: FailedLogSourceDetails.[0].IsMonitored
+            iscontext: true
+          right:
+            value:
+              simple: "TRUE"
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": -310
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "40":
+    id: "40"
+    taskid: c889e3ca-fa13-4f0e-9be4-add54c5e1986
+    type: regular
+    task:
+      id: c889e3ca-fa13-4f0e-9be4-add54c5e1986
+      version: -1
+      name: Set Closing Details
+      description: Set a value in context under the key you entered.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "25"
+    scriptarguments:
+      key:
+        simple: ClosingDetails
+      value:
+        simple: 'Log source is excluded from monitoring. Closing ticket. '
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 960,
+          "y": -140
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "41":
+    id: "41"
+    taskid: a7531e09-b36d-4768-a61f-e49f86ef5782
+    type: regular
+    task:
+      id: a7531e09-b36d-4768-a61f-e49f86ef5782
+      version: -1
+      name: Get Core Lock
+      description: Gets a specific lock. If the lock doesn't exist, it creates one.
+        If the lock is already in use, the command waits until the lock is released
+        or until timeout is reached. If timeout is reached and the lock hasn't been
+        released, the command fails to get the lock.
+      script: Core Lock|||core-lock-get
+      type: regular
+      iscommand: true
+      brand: Core Lock
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "28"
+      '#none#':
+      - "24"
+    scriptarguments:
+      info:
+        simple: Lock used in the main playbook of the log source monitoring flow.
+          Invoked when pulling data about log source from lookup
+      name:
+        simple: LogSourceMonitoringMainLock
+      retry-count:
+        simple: "5"
+      retry-interval:
+        simple: "120"
+      timeout:
+        simple: "600"
+      using:
+        simple: Core_Lock_Log_Monitoring
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": -900
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "42":
+    id: "42"
+    taskid: d244b549-59f1-47fd-9c4e-f724183f9e90
+    type: regular
+    task:
+      id: d244b549-59f1-47fd-9c4e-f724183f9e90
+      version: -1
+      name: Release Lock
+      description: Release a lock
+      script: Core Lock|||core-lock-release
+      type: regular
+      iscommand: true
+      brand: Core Lock
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "26"
+    scriptarguments:
+      name:
+        simple: LogSourceMonitoringMainLock
+      using:
+        simple: Core_Lock_Log_Monitoring
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 740,
+          "y": -610
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {
+      "39_16_yes": 0.39
+    },
+    "paper": {
+      "dimensions": {
+        "height": 2045,
+        "width": 1710,
+        "x": 180,
+        "y": -1210
+      }
+    }
+  }
+inputs: []
+inputSections:
+- inputs: []
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs: []
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs: []
+sourceplaybookid: 6ef78fdf-f309-40f4-84e0-dd55bea50237
+dirtyInputs: true
+adopted: true
+possibleresponses: []
