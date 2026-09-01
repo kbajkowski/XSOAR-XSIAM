@@ -4,7 +4,7 @@
 
 This integration connects Cortex XSOAR / XSIAM to the **Cribl Search** control-plane API (v2). It lets analysts and playbooks run ad-hoc searches over Cribl Lake, object stores (S3, GCS, Azure Blob), Cribl Edge/Leader, and federated third-party APIs, then retrieve the results as structured events. It also manages the objects that Cribl Search depends on: saved searches, datasets, dataset providers, dataset provider types, macros, and datatypes.
 
-The typical automation flow is **create a search job → poll its status → fetch results**. See [Searching Cribl Lake](#searching-cribl-lake) for a worked example.
+The typical automation flow is **create a search job → poll its status → fetch results**. See [Searching Cribl Lake](#searching-cribl-lake) for a worked example
 
 ## Prerequisites
 

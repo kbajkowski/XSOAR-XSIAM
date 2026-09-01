@@ -1,6 +1,7 @@
 import json
 import time
 
+
 VENDOR_NAME = 'CriblSearch'
 CRIBL_CLOUD_TOKEN_URL = 'https://login.cribl.cloud/oauth/token'
 CRIBL_CLOUD_AUDIENCE = 'https://api.cribl.cloud'

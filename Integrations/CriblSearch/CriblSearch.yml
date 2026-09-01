@@ -19,7 +19,7 @@ configuration:
   type: 9
   additionalinfo: >-
     OAuth2 client credentials for Cribl.Cloud. Create a client under
-    Settings > Global Settings > API Authentication in your Cribl.Cloud organization.
+    Settings > Global Settings > API Authentication in your Cribl.Cloud organization
 - defaultvalue: https://login.cribl.cloud/oauth/token
   display: Token URL
   name: token_url
