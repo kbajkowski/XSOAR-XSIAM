@@ -18,9 +18,7 @@ class Client(BaseClient):
         return self._http_request(method='GET', url_suffix=f'/alerts/{alert_id}')
 
     def list_alerts(self, limit: int, status: str | None = None) -> dict:
-        params: dict = {'limit': limit}
-        if status:
-            params['status'] = status
+        params = assign_params(limit=limit, status=status)
         return self._http_request(method='GET', url_suffix='/alerts', params=params)
 ```
 
@@ -45,7 +43,7 @@ def get_alert_command(client: Client, args: dict) -> CommandResults:
         outputs_prefix='VendorName.Alert',
         outputs_key_field='ID',
         outputs=response,
-        readable_output=tableToMarkdown('Alert', response),
+        readable_output=tableToMarkdown('Alert', response, removeNull=True),
         raw_response=response
     )
 ```
@@ -92,7 +90,7 @@ def main() -> None:
             raise NotImplementedError(f'Command {command} is not implemented')
 
     except Exception as e:
-        return_error(f'Failed to execute {command} command.\nError:\n{str(e)}')
+        return_error(f'Failed to execute {command} command.\nError:\n{traceback.format_exc()}')
 
 
 if __name__ in ('__main__', '__builtin__', 'builtins'):
@@ -320,4 +318,61 @@ VendorName/
   VendorName.yml       # Integration definition (with Python embedded)
   VendorName_test.py   # Unit tests (use pytest + pytest-mock)
   README.md            # Human-readable documentation
+```
+
+---
+
+## Anti-Patterns to Avoid
+
+| Anti-Pattern | Correct Pattern |
+|---|---|
+| Global variables holding `demisto.params()` | Extract params inside `main()` only |
+| `sleep()` for polling | Use scheduled commands or `_http_request` retries |
+| `demisto.results()` inside command functions | Return `CommandResults`, call `return_results()` in `main()` |
+| Hardcoded API URLs | Use `base_url` from params |
+| `print()` statements | Use `demisto.debug()` / `demisto.info()` |
+| Epoch timestamps in human-readable output | Use `timestamp_to_datestring()` |
+| Logging sensitive data | Never log API keys, tokens, or credentials |
+| Manual `if x is not None` param building | Use `assign_params()` |
+| `while True` pagination loops | Use bounded loops: `for page in range(1, MAX_PAGES + 1)` with a constant like `MAX_PAGES = 200` |
+| `.get("key", {}).get("nested")` for chained access | Use `(.get("key") or {}).get("nested")` — when the key exists with value `None`, `.get("key", {})` returns `None` (not the default `{}`), causing `AttributeError` on the chained `.get()`. The `or {}` pattern handles both missing keys and explicit `None` values. |
+| Dead code / unused constants | Remove entirely — reviewers flag unused variables, dead imports, and unreachable code |
+
+---
+
+## Description Text Standards (Reviewer-Enforced)
+
+These apply to `description` fields on arguments, `additionalinfo` on config params, and command descriptions:
+
+| Rule | Wrong | Right |
+|---|---|---|
+| Start with "The " | `description: ID of the resource.` | `description: The ID of the resource.` |
+| Booleans start with "Whether" | `description: Enable verbose mode.` | `description: Whether to enable verbose mode.` |
+| isArray args say "comma-separated" | `description: The IDs to filter by.` | `description: A comma-separated list of IDs to filter by.` |
+| Don't repeat defaultValue in text | `description: Max results (default 50).` with `defaultValue: "50"` | `description: The maximum number of results.` with `defaultValue: "50"` |
+| End with period | `description: The resource name` | `description: The resource name.` |
+
+---
+
+## Case-Insensitive Matching
+
+When comparing enum-like API values (risk levels, statuses, types), always normalize case:
+
+```python
+# Wrong — breaks if API returns "High" or "HIGH"
+if risk_level == "high":
+
+# Right
+if risk_level and risk_level.lower() == "high":
+
+# For dict lookups
+level_map = {"low": 1, "medium": 2, "high": 3}
+score = level_map.get(risk_level.lower() if risk_level else "", 0)
+```
+
+Same for prefix matching (e.g., CVE IDs): use `.upper()` normalization:
+
+```python
+if finding_name.upper().startswith("CVE-"):
+    cve_id = finding_name.upper()
 ```

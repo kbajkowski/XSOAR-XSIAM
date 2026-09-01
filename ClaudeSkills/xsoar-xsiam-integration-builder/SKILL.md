@@ -72,7 +72,13 @@ Briefly summarize your analysis to the user and confirm before generating code.
 Write `<VendorName>.py` following these rules exactly:
 
 ### Structure (in order)
-1. Imports — standard library and third-party only (e.g., `import json`, `import time`). **Do NOT include** `import demistomock as demisto`, `from CommonServerPython import *`, or `from CommonServerUserPython import *` — these are injected automatically by the XSOAR runtime and must be omitted from the source.
+1. Imports — always start with the three standard XSOAR imports, then standard library and third-party:
+   ```python
+   import demistomock as demisto  # noqa: F401
+   from CommonServerPython import *  # noqa: F401
+   from CommonServerUserPython import *  # noqa: F401
+   ```
+   The `# noqa: F401` comments suppress flake8 unused-import warnings. These imports are required for local development/testing with demistomock and are present in every integration in the demisto/content repository.
 2. Constants (`VENDOR_NAME`, `DEFAULT_MAX_RESULTS`, any static mappings)
 3. `Client` class extending `BaseClient`
 4. `test_module(client)` function
@@ -92,6 +98,18 @@ Write `<VendorName>.py` following these rules exactly:
 - `main()` wraps everything in `try/except Exception` and calls `return_error()` on failure
 - Use `demisto.debug()` to log the command name at the start of `main()`
 - API key can come from `params.get('apikey')` OR `params.get('credentials', {}).get('password')` — check both
+
+### Description Text Standards (Reviewer-Enforced)
+
+These apply to `description` fields on arguments, `additionalinfo` on config params, and command descriptions:
+
+| Rule | Wrong | Right |
+|---|---|---|
+| Start with "The " | `description: ID of the resource.` | `description: The ID of the resource.` |
+| Booleans start with "Whether" | `description: Enable verbose mode.` | `description: Whether to enable verbose mode.` |
+| isArray args say "comma-separated" | `description: The IDs to filter by.` | `description: A comma-separated list of IDs to filter by.` |
+| Don't repeat defaultValue in text | `description: Max results (default 50).` with `defaultValue: "50"` | `description: The maximum number of results.` with `defaultValue: "50"` |
+| End with period | `description: The resource name` | `description: The resource name.` |
 
 ---
 
@@ -190,14 +208,15 @@ If the user wants bidirectional sync between XSOAR incidents and the remote syst
 3. `get_remote_data_command(client, args, params)` — pulls updated fields + new entries (comments, files) from the remote ticket; returns `[ticket_dict] + [entry_dicts]`
 4. `update_remote_system_command(client, args, params)` — pushes delta fields and outbound-tagged entries to the remote; returns the remote ID string
 5. `get_modified_remote_data_command(client, args)` — queries remote for IDs modified since `lastUpdate`; returns `GetModifiedRemoteDataResponse(list_of_ids)`
-6. Wire all three into `main()`
+6. `get_mapping_fields_command(client)` — returns a `SchemeTypeMapping` object listing all fields available for mapping in the classifier/mapper UI
+7. Wire all four into `main()`
 
 **YAML additions:**
 - `script.ismappable: true`
 - `script.isremotesyncin: true`
 - `script.isremotesyncout: true`
 - Mirror configuration params: `mirror_direction`, `comment_tag`, `comment_tag_from_<vendor>`, `file_tag`, `file_tag_from_<vendor>`, `mirror_limit`, `close_incident`, `close_ticket`
-- Three mirror commands in `script.commands`: `get-remote-data`, `update-remote-system`, `get-modified-remote-data`
+- Four mirror commands in `script.commands`: `get-remote-data`, `update-remote-system`, `get-modified-remote-data`, `get-mapping-fields`
 
 ---
 
@@ -327,6 +346,13 @@ Before declaring the integration complete, verify:
 - [ ] `verify_certificate` correctly inverts the `insecure` param
 - [ ] README documents every command and all configuration parameters
 - [ ] **Phase 6 completed: Python code is embedded in `script.script` as an indented `|-` block scalar in the YAML**
+- [ ] `raw_response` is passed in every `CommandResults` that returns API data
+- [ ] `assign_params()` used for building all request bodies/params (no manual None filtering)
+- [ ] No global variables holding `demisto.params()` — extract inside `main()` only
+- [ ] No `sleep()` calls — use scheduled commands or `_http_request` retries
+- [ ] `traceback.format_exc()` used in `return_error()` for full stack traces
+- [ ] Description text follows reviewer standards (starts with "The ", booleans start with "Whether", ends with period)
+- [ ] Pagination loops are bounded (no `while True` — use `for page in range(1, MAX_PAGES + 1)`)
 
 Event collectors only:
 - [ ] `script.isfetchevents: true`, `marketplaces: [marketplacev2, platform]`, `supportedModules: [xsiam]` are set
@@ -334,3 +360,8 @@ Event collectors only:
 - [ ] `last_run` checkpointing dedups events at the boundary timestamp (no duplicated or dropped events across fetches)
 - [ ] `<vendor>-get-events` has a required `should_push_events` argument and only pushes when it is true
 - [ ] README states the target dataset name (`<vendor>_<product>_raw`)
+
+Mirroring only:
+- [ ] `get-mapping-fields` command is implemented and wired in `main()`
+- [ ] `MIRROR_DIRECTION` constant maps UI dropdown to `"In"`, `"Out"`, `"Both"`, `None`
+- [ ] Mirror direction, close incident, close ticket config params are present
