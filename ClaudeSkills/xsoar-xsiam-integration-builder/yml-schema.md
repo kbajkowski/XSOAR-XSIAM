@@ -11,10 +11,14 @@ category: <category>           # See Category Values below
 commonfields:
   id: <IntegrationName>        # Unique ID, no spaces
   version: -1                  # Always -1 for new integrations
-configuration: [...]           # Auth and connection params — see Configuration section
-description: <string>          # One-sentence description shown in marketplace
-display: <Display Name>        # Human-readable name shown in UI
 name: <IntegrationName>        # Must match commonfields.id
+display: <Display Name>        # Human-readable name shown in UI
+description: <string>          # One-sentence description shown in marketplace
+provider: <VendorName>         # The vendor name
+sectionorder:                  # Section ordering for config UI
+  - Connect
+  - Collect
+configuration: [...]           # Auth and connection params — see Configuration section
 script:
   commands: [...]              # List of commands — see Command section
   runonce: false               # true only for one-shot utility integrations
@@ -29,6 +33,8 @@ tests:
 - No tests                     # Use "No tests" unless you have a test playbook name
 ```
 
+Root key order matters — YAML must start with `commonfields`, then `name`, then `display`. Validation fails if these appear later or are duplicated.
+
 ---
 
 ## Category Values
@@ -37,12 +43,20 @@ Choose the most specific match:
 - `Analytics & SIEM`
 - `Authentication & Identity Management`
 - `Case Management`
+- `CI/CD`
+- `Cloud Security`
+- `Cloud Service Provider`
+- `Cloud Services`
+- `Code Repositories`
 - `Data Enrichment & Threat Intelligence`
 - `Database`
-- `Email Gateway`
+- `Deception & Breach Simulation`
+- `Email`
 - `Endpoint`
 - `Forensics & Malware Analysis`
+- `Identity and Access Management`
 - `IT Services`
+- `Messaging and Conferencing`
 - `Network Security`
 - `Utilities`
 - `Vulnerability Management`
@@ -78,12 +92,16 @@ configuration:
   required: false
   type: 8                   # Boolean checkbox
   defaultvalue: 'false'
+  section: Connect
+  advanced: true
 
 - display: Use system proxy settings
   name: proxy
   required: false
   type: 8                   # Boolean checkbox
   defaultvalue: 'false'
+  section: Connect
+  advanced: true
 
 - defaultvalue: '50'
   display: Maximum number of incidents per fetch
@@ -115,11 +133,14 @@ configuration:
 | Code | Type | Use For |
 |------|------|---------|
 | 0 | Short text | URLs, free text, numbers as strings |
-| 4 | Encrypted | API keys, tokens, passwords (single field) |
+| 4 | Encrypted | API keys, tokens, passwords (single field). NOT recommended — use type 9 instead |
 | 8 | Boolean | Checkboxes (insecure, proxy, fetch) |
-| 9 | Credentials | Username + password pairs |
-| 12 | Long text | Multi-line text (e.g. certificate content) |
-| 13 | Single select | Dropdown lists |
+| 9 | Authentication | Token with credential store support. Use `hiddenusername: true` for API-key-only |
+| 12 | Long text | Multi-line text (e.g. certificate content, JSON configs) |
+| 13 | Incident type dropdown | Auto-populated from XSIAM incident types |
+| 15 | Single-select dropdown | Fixed set of choices (use `options:` list) |
+| 16 | Multi-select dropdown | Multiple choices (use `options:` list) |
+| 19 | Fetch interval | Numeric interval for fetch frequency |
 
 ---
 
@@ -160,6 +181,15 @@ script:
     - contextPath: VendorName.Alert.UpdatedAt
       description: Timestamp when the alert was last updated.
       type: Date
+```
+
+**Destructive commands** (delete, terminate, cancel) must set `execution: true`:
+```yaml
+  - name: vendorname-delete-alert
+    description: Deletes an alert by its ID.
+    execution: true
+    arguments:
+    ...
 ```
 
 ### Argument Fields
