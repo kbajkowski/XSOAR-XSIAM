@@ -1,0 +1,1460 @@
+id: 1c0d3360-9b8e-4be6-828d-851ded1c8762
+version: 87
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ""
+  type: ""
+  name: ""
+name: ITDE_Create_Notifications_for_Failed_Log_Sources_1.4
+description: Creates SNOW Ticket if one doesn't exist or sends a reminder if one already
+  exists for a failing log source as part of the ITDE Log Source Monitoring workflow.
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: 35390e6d-a7b3-4f85-88c8-fa4d892cc9d4
+    type: start
+    task:
+      id: 35390e6d-a7b3-4f85-88c8-fa4d892cc9d4
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "33"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 387.5,
+          "y": 57.5
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "2":
+    id: "2"
+    taskid: ae52bdca-8aaf-45f4-8850-c13e1d16f54f
+    type: title
+    task:
+      id: ae52bdca-8aaf-45f4-8850-c13e1d16f54f
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1502.5,
+          "y": 2972.5
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "6":
+    id: "6"
+    taskid: b4819a97-a8c0-44f9-adaa-91316415bab1
+    type: regular
+    task:
+      id: b4819a97-a8c0-44f9-adaa-91316415bab1
+      version: -1
+      name: Send E-Mail Notification of Failed Log Source
+      description: Send an email related to failing log source
+      script: mail-sender|||send-mail
+      type: regular
+      iscommand: true
+      brand: mail-sender
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "20"
+      '#none#':
+      - "49"
+    scriptarguments:
+      htmlBody:
+        simple: "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<title>Hello</title>\n\t</head>\n\t<body>\n\t\t<table
+          width=\"100%\" border=\"0\" align=\"center\">\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"0\" align=\"center\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\">\n\t\t\t\t\t\t\t\t<h1>&nbsp;</h1>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"1\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"
+          style=\"border-style:solid; border-color:black; border-bottom:none;\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#A4CE4E\" width=\"20%\">\n\t\t\t\t\t\t\t\t<table
+          width=\"100%\" border=\"0\">\n\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t<td
+          width=\"30%\">&nbsp;</td>\n\t\t\t\t\t\t\t\t\t\t<td style=\"background-color:white\"
+          align=\"center\" width=\"40%\">\n\t\t\t\t\t\t\t\t\t\t\t<img alt=\"Embedded
+          Image\" width=\"180\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWIAAABQCAYAAAAjmX9oAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6REZFNjdBOTc4M0ZFMTFFNjg1MzVBNkVBOURFMUM5QTgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6REZFNjdBOTg4M0ZFMTFFNjg1MzVBNkVBOURFMUM5QTgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpERkU2N0E5NTgzRkUxMUU2ODUzNUE2RUE5REUxQzlBOCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpERkU2N0E5NjgzRkUxMUU2ODUzNUE2RUE5REUxQzlBOCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PriNytcAABS0SURBVHja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\"
+          />\n\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t<td width=\"30%\">&nbsp;</td>\n\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#FF0000\" align=\"center\">\n\t\t\t\t\t\t\t\t<h2>
+          ${inputs.FailedLogSourceDetails.LogSourceName} has stopped sending logs
+          into ${issue.detectionsource}.</h2>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\" style=\"background-color: #A7A8AA\">&nbsp;</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; Log
+          Source</td>\n\t\t\t\t\t\t\t<td style=\" background-color: #D9D9D6\">&nbsp;
+          ${inputs.FailedLogSourceDetails.LogSourceName}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; No
+          Data Volume Observed Between (UTC)</td>\n\t\t\t\t\t\t\t<td style=\"background-color:#D9D9D6\">&nbsp;
+          ${issue.externalstarttime} and ${issue.externalendtime}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; ServiceNow
+          Ticket Number</td>\n\t\t\t\t\t\t\t<td style=\"background-color:#D9D9D6\">&nbsp;${ServiceNowIncident.TicketNumber}
+          </td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t\t<table width=\"50%\"
+          border=\"1\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-style:solid;
+          border-color:black; border-top:none;\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\" style=\"background-color:#A7A8AA\">&nbsp;</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</table>\n\t</body>\n</html>"
+      subject:
+        simple: LogSource ${inputs.FailedLogSourceDetails.LogSourceName} is Failing
+      to:
+        simple: ${config.email_to}
+      using:
+        simple: ${config.mail_sender_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1130
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "8":
+    id: "8"
+    taskid: 23e8162f-4e5b-4188-9b63-0d8df4aba6fd
+    type: regular
+    task:
+      id: 23e8162f-4e5b-4188-9b63-0d8df4aba6fd
+      version: -1
+      name: Create SNOW Ticket
+      description: If no existing ticket is found, we create one using this command.
+      script: '|||servicenow-create-incident-assignmentgroup'
+      type: regular
+      iscommand: true
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "20"
+      '#none#':
+      - "34"
+    scriptarguments:
+      assignmentGroup:
+        simple: ${config.assignment_group}
+      callerNumber:
+        simple: ${config.caller_number}
+      callingSystem:
+        simple: ${config.calling_system}
+      category:
+        simple: ${inputs.FailedLogSourceDetails.ServiceNowCategory}
+      configurationItem:
+        simple: ${inputs.FailedLogSourceDetails.ConfigurationItem}
+      contactType:
+        simple: ${config.contact_type}
+      description:
+        simple: |-
+          Monitoring indicates no events have been received within ${issue.detectionsource} from ${inputs.FailedLogSourceDetails.LogSourceName} between ${issue.externalstarttime} and ${issue.externalendtime}.
+
+          Please review the logging configuration.
+      impact:
+        simple: ${config.impact}
+      reportedSource:
+        simple: ${config.reported_source}
+      retry-count:
+        simple: "3"
+      retry-interval:
+        simple: "60"
+      shortDescription:
+        simple: Log Source in Error State
+      subCategory:
+        simple: ${inputs.FailedLogSourceDetails.ServiceNowSubcategory}
+      urgency:
+        simple: ${config.urgency}
+      using:
+        simple: ${config.service_now_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 152.5,
+          "y": 590
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "9":
+    id: "9"
+    taskid: 90110ff1-48dd-41da-8462-0818d995a552
+    type: condition
+    task:
+      id: 90110ff1-48dd-41da-8462-0818d995a552
+      version: -1
+      name: Is log source is Azure?
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "6"
+      "yes":
+      - "10"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: containsGeneral
+          left:
+            value:
+              complex:
+                root: inputs.FailedLogSourceDetails
+                accessor: LogSourceName
+                transformers:
+                - operator: toLowerCase
+            iscontext: true
+          right:
+            value:
+              simple: azure
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 265,
+          "y": 945
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "10":
+    id: "10"
+    taskid: c1d09780-98d9-4d3e-ba70-39f6daa770e0
+    type: regular
+    task:
+      id: c1d09780-98d9-4d3e-ba70-39f6daa770e0
+      version: -1
+      name: Send E-Mail Notification of Failed Log Source to Azure Team
+      description: Send an email related to failing log source
+      script: Mail Sender (New)|||send-mail
+      type: regular
+      iscommand: true
+      brand: Mail Sender (New)
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "20"
+      '#none#':
+      - "49"
+    scriptarguments:
+      htmlBody:
+        simple: "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<title>Hello</title>\n\t</head>\n\t<body>\n\t\t<table
+          width=\"100%\" border=\"0\" align=\"center\">\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"0\" align=\"center\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\">\n\t\t\t\t\t\t\t\t<h1>&nbsp;</h1>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"1\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"
+          style=\"border-style:solid; border-color:black; border-bottom:none;\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#A4CE4E\" width=\"20%\">\n\t\t\t\t\t\t\t\t<table
+          width=\"100%\" border=\"0\">\n\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t<td
+          width=\"30%\">&nbsp;</td>\n\t\t\t\t\t\t\t\t\t\t<td style=\"background-color:white\"
+          align=\"center\" width=\"40%\">\n\t\t\t\t\t\t\t\t\t\t\t<img alt=\"Embedded
+          Image\" width=\"180\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWIAAABQCAYAAAAjmX9oAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6REZFNjdBOTc4M0ZFMTFFNjg1MzVBNkVBOURFMUM5QTgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6REZFNjdBOTg4M0ZFMTFFNjg1MzVBNkVBOURFMUM5QTgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpERkU2N0E5NTgzRkUxMUU2ODUzNUE2RUE5REUxQzlBOCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpERkU2N0E5NjgzRkUxMUU2ODUzNUE2RUE5REUxQzlBOCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PriNytcAABS0SURBVHja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\"
+          />\n\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t<td width=\"30%\">&nbsp;</td>\n\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#FF0000\" align=\"center\">\n\t\t\t\t\t\t\t\t<h2>
+          ${inputs.FailedLogSourceDetails.LogSourceName}  has stopped sending logs</h2>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\" style=\"background-color: #A7A8AA\">&nbsp;</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; Log
+          Source</td>\n\t\t\t\t\t\t\t<td style=\" background-color: #D9D9D6\">&nbsp;
+          ${inputs.FailedLogSourceDetails.LogSourceName}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; Last
+          Event At (UTC)</td>\n\t\t\t\t\t\t\t<td style=\"background-color:#D9D9D6\">&nbsp;
+          ${inputs.FailedLogSourceDetails.LastEventAt}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; ServiceNow
+          Ticket Number</td>\n\t\t\t\t\t\t\t<td style=\"background-color:#D9D9D6\">&nbsp;${ServiceNowIncident.TicketNumber}
+          </td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t\t<table width=\"50%\"
+          border=\"1\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-style:solid;
+          border-color:black; border-top:none;\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\" style=\"background-color:#A7A8AA\">&nbsp;</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</table>\n\t</body>\n</html>"
+      subject:
+        simple: LogSource ${inputs.FailedLogSourceDetails.LogSourceName} is Failing
+      to:
+        simple: ${config.email_to_azure}
+      using:
+        simple: ${config.mail_sender_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 1130
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "18":
+    id: "18"
+    taskid: 316cf659-4b6c-4da3-a333-440108b436c9
+    type: regular
+    task:
+      id: 316cf659-4b6c-4da3-a333-440108b436c9
+      version: -1
+      name: Update Critical Log Sources Lookup with Snow Ticket Number
+      description: Updates the lookup table with the ServiceNow incident ID created
+        earlier in the playbook and sets the "IsAlertTriggered" flag to TRUE.
+      script: Core REST API|||core-api-post
+      type: regular
+      iscommand: true
+      brand: Core REST API
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "20"
+      '#none#':
+      - "31"
+    scriptarguments:
+      body:
+        simple: '{"request_data": {"dataset_name": "critical_logsources", "key_fields":
+          ["logsourcename","alertsource"],"data":[{"logsourcename":"${inputs.FailedLogSourceDetails.LogSourceName}","logsourcetype":"${inputs.FailedLogSourceDetails.LogSourceType}","servicenowcategory":"${inputs.FailedLogSourceDetails.ServiceNowCategory}","servicenowsubcategory":"${inputs.FailedLogSourceDetails.ServiceNowSubcategory}","configurationitem":"${inputs.FailedLogSourceDetails.ConfigurationItem}","firstalertedat":${issue.externalendtime},"isalerttriggered":"TRUE","snowticketnum":"${ServiceNowIncident.TicketNumber}","alertsource":"${issue.detectionsource}","threshold":"${inputs.FailedLogSourceDetails.Threshold}","ismonitored":"${inputs.FailedLogSourceDetails.IsMonitored}"}]}}'
+      retry-count:
+        simple: "3"
+      retry-interval:
+        simple: "30"
+      timeout:
+        simple: "1"
+      uri:
+        simple: /public_api/v1/xql/lookups/add_data
+      using:
+        simple: ${config.core_rest_api_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 930,
+          "y": 1500
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "19":
+    id: "19"
+    taskid: f56013ba-478d-4120-908a-8bd180acc122
+    type: regular
+    task:
+      id: f56013ba-478d-4120-908a-8bd180acc122
+      version: -1
+      name: Set Closing Details to Context (Cribl)
+      description: Set closing details to context
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "21"
+    scriptarguments:
+      key:
+        simple: ClosingDetails
+      value:
+        simple: Log source has failed to send logs to Cribl between ${ExternalStartTimeStr}
+          and ${ExternalEndTimeStr}. ServiceNow ${ServiceNowIncident.TicketNumber}
+          has been opened for ${inputs.FailedLogSourceDetails.LogSourceName}.
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 745,
+          "y": 2410
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "20":
+    id: "20"
+    taskid: de193256-4bd0-496f-83c1-fb3406d49c9d
+    type: playbook
+    task:
+      id: de193256-4bd0-496f-83c1-fb3406d49c9d
+      version: -1
+      name: Error Handling SubPlaybook
+      description: Playbook used to standardize what happens on error paths if a task
+        encounters an error.
+      playbookName: Error Handling SubPlaybook
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    scriptarguments:
+      EmailAddress:
+        simple: ${config.error_notification_email}
+      NotificationType:
+        simple: email
+    separatecontext: true
+    continueonerrortype: ""
+    loop:
+      iscommand: false
+      exitCondition: ""
+      wait: 1
+      max: 100
+    view: |-
+      {
+        "position": {
+          "x": 265,
+          "y": 2815
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "21":
+    id: "21"
+    taskid: 21bb1e45-d68a-4711-aa91-07748a1703ce
+    type: regular
+    task:
+      id: 21bb1e45-d68a-4711-aa91-07748a1703ce
+      version: -1
+      name: Update Critical Logsource History Lookup With Event Details
+      description: Update historical lookup table with event info.
+      script: Core REST API|||core-api-post
+      type: regular
+      iscommand: true
+      brand: Core REST API
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "20"
+      '#none#':
+      - "38"
+    scriptarguments:
+      body:
+        simple: '{"request_data": {"dataset_name": "critical_logsources_history","data":[{"logsourcename":"${inputs.FailedLogSourceDetails.LogSourceName}","logsourcetype":"${inputs.FailedLogSourceDetails.LogSourceType}","firstalertedat":${issue.externalendtime},"isalerttriggered":"TRUE","snowticketnum":"${ServiceNowIncident.TicketNumber}","snowticketid":"${ServiceNowIncident.Id}","message":"${ClosingDetails}","isactive":"0","hasfailed":"1","alertcount":"1","alertsource":"${issue.detectionsource}"}]}}'
+      retry-count:
+        simple: "3"
+      retry-interval:
+        simple: "30"
+      timeout:
+        simple: "1"
+      uri:
+        simple: /public_api/v1/xql/lookups/add_data
+      using:
+        simple: ${config.core_rest_api_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1370,
+          "y": 2595
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "23":
+    id: "23"
+    taskid: a1f37c44-dc1b-4525-9b8e-993b4ff5a4e3
+    type: regular
+    task:
+      id: a1f37c44-dc1b-4525-9b8e-993b4ff5a4e3
+      version: -1
+      name: Set Date Time String
+      description: Sets the date to a string format in the context. Used in the closing
+        details later.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "27"
+    scriptarguments:
+      key:
+        simple: ExternalStartTimeStr
+      value:
+        complex:
+          root: issue
+          accessor: externalstarttime
+          transformers:
+          - operator: toString
+            args:
+              format: {}
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 745,
+          "y": 1855
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "24":
+    id: "24"
+    taskid: b5f8da43-286d-48d1-be63-a96f4f7b131f
+    type: regular
+    task:
+      id: b5f8da43-286d-48d1-be63-a96f4f7b131f
+      version: -1
+      name: Set Date Time String
+      description: Sets the date to a string format in the context. Used in the closing
+        details later.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "27"
+    scriptarguments:
+      key:
+        simple: ExternalEndTimeStr
+      value:
+        complex:
+          root: issue
+          accessor: externalendtime
+          transformers:
+          - operator: toString
+            args:
+              format: {}
+          - operator: SetIfEmpty
+            args:
+              applyIfEmpty: {}
+              defaultValue:
+                value:
+                  simple: N/A
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1585,
+          "y": 1855
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "26":
+    id: "26"
+    taskid: 6ea10064-73aa-409b-a44d-e23476bc8251
+    type: regular
+    task:
+      id: 6ea10064-73aa-409b-a44d-e23476bc8251
+      version: -1
+      name: Set Closing Details to Context (XSIAM)
+      description: Set a value in context under the key you entered.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "21"
+    scriptarguments:
+      key:
+        simple: ClosingDetails
+      value:
+        simple: Log source has not been seen in XSIAM for ${issue.ingestion_failure_duration}
+          hours. It was last seen ${ExternalStartTimeStr}. ServiceNow ${ServiceNowIncident.TicketNumber}
+          has been opened for ${inputs.FailedLogSourceDetails.LogSourceName}.
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1605,
+          "y": 2410
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "27":
+    id: "27"
+    taskid: d97dcb03-671e-4bfe-b265-02bad299a2c3
+    type: condition
+    task:
+      id: d97dcb03-671e-4bfe-b265-02bad299a2c3
+      version: -1
+      name: What is the source of this alert?
+      description: Check whether the source of this alret is the Cribl notifications
+        or XSIAM's internal correlation rule.
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      Cribl:
+      - "45"
+      XSIAM:
+      - "40"
+    separatecontext: false
+    conditions:
+    - label: XSIAM
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: ${issue.detectionsource}
+            iscontext: true
+          right:
+            value:
+              simple: XSIAM
+    - label: Cribl
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: ${issue.detectionsource}
+            iscontext: true
+          right:
+            value:
+              simple: Cribl
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1155,
+          "y": 2040
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "29":
+    id: "29"
+    taskid: 5c3d8e5a-676f-41b2-9089-1e7d44d66a48
+    type: condition
+    task:
+      id: 5c3d8e5a-676f-41b2-9089-1e7d44d66a48
+      version: -1
+      name: Does SNOW Ticket Already Exist?
+      description: 'Check is there is already an existing SNOW ticket for this log
+        source. We accomplish this by checking the SNOWTicketNum field from the lookup
+        table. '
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "8"
+      "yes":
+      - "32"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isNotEmpty
+          left:
+            value:
+              simple: inputs.FailedLogSourceDetails.SNOWTicketNum
+            iscontext: true
+          right:
+            value: {}
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 387.5,
+          "y": 405
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "31":
+    id: "31"
+    taskid: f5ac1e92-285f-4042-9a60-f6a075814f45
+    type: title
+    task:
+      id: f5ac1e92-285f-4042-9a60-f6a075814f45
+      version: -1
+      name: Set Closing Details
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "23"
+      - "24"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1155,
+          "y": 1685
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "32":
+    id: "32"
+    taskid: 5b9a7987-eb1d-4593-bfb7-37cf41e2f361
+    type: regular
+    task:
+      id: 5b9a7987-eb1d-4593-bfb7-37cf41e2f361
+      version: -1
+      name: Get Snow Ticket Details
+      description: get Incident from Service now
+      script: '|||servicenow-get-incident'
+      type: regular
+      iscommand: true
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "44"
+      '#none#':
+      - "35"
+    scriptarguments:
+      IncidentId:
+        simple: ${inputs.FailedLogSourceDetails.SNOWTicketNum}
+      retry-count:
+        simple: "5"
+      retry-interval:
+        simple: "120"
+      using:
+        simple: ${config.service_now_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1042.5,
+          "y": 590
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "33":
+    id: "33"
+    taskid: 2f20e3b3-6803-45f8-91c2-7145a760ead1
+    type: title
+    task:
+      id: 2f20e3b3-6803-45f8-91c2-7145a760ead1
+      version: -1
+      name: Check For SNOW Ticket
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "29"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 387.5,
+          "y": 235
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "34":
+    id: "34"
+    taskid: b607ee11-c789-43f8-b5b0-677b1ec18707
+    type: title
+    task:
+      id: b607ee11-c789-43f8-b5b0-677b1ec18707
+      version: -1
+      name: Handle Email Communication
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "9"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 265,
+          "y": 775
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "35":
+    id: "35"
+    taskid: 273a7324-3574-41df-995a-9ca0ca761bda
+    type: title
+    task:
+      id: 273a7324-3574-41df-995a-9ca0ca761bda
+      version: -1
+      name: Handle Reminder Email Communication
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "36"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1257.5,
+          "y": 775
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "36":
+    id: "36"
+    taskid: 8cf7cb76-ab6d-4ec4-a58e-2f9815198116
+    type: regular
+    task:
+      id: 8cf7cb76-ab6d-4ec4-a58e-2f9815198116
+      version: -1
+      name: Send Reminder E-Mail Notification of Failed Log Source
+      description: commands.server.mail.sendmail
+      script: mail-sender|||send-mail
+      type: regular
+      iscommand: true
+      brand: mail-sender
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "44"
+      '#none#':
+      - "39"
+      - "47"
+    scriptarguments:
+      htmlBody:
+        simple: "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<title>Hello</title>\n\t</head>\n\t<body>\n\t\t<table
+          width=\"100%\" border=\"0\" align=\"center\">\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"0\" align=\"center\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\">\n\t\t\t\t\t\t\t\t<h1>&nbsp;</h1>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"1\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"
+          style=\"border-style:solid; border-color:black; border-bottom:none;\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#A4CE4E\" width=\"20%\">\n\t\t\t\t\t\t\t\t<table
+          width=\"100%\" border=\"0\">\n\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t<td
+          width=\"30%\">&nbsp;</td>\n\t\t\t\t\t\t\t\t\t\t<td style=\"background-color:white\"
+          align=\"center\" width=\"40%\">\n\t\t\t\t\t\t\t\t\t\t\t<img alt=\"Embedded
+          Image\" width=\"180\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWIAAABQCAYAAAAjmX9oAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6REZFNjdBOTc4M0ZFMTFFNjg1MzVBNkVBOURFMUM5QTgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6REZFNjdBOTg4M0ZFMTFFNjg1MzVBNkVBOURFMUM5QTgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpERkU2N0E5NTgzRkUxMUU2ODUzNUE2RUE5REUxQzlBOCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpERkU2N0E5NjgzRkUxMUU2ODUzNUE2RUE5REUxQzlBOCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PriNytcAABS0SURBVHja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\"
+          />\n\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t<td width=\"30%\">&nbsp;</td>\n\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#FF0000\" align=\"center\">\n\t\t\t\t\t\t\t\t<h2>
+          Reminder - ${inputs.FailedLogSourceDetails.LogSourceName} is still in a
+          failed state and has not been sending logs into ${issue.detectionsource}.</h2>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\" style=\"background-color: #A7A8AA\">&nbsp;</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; Log
+          Source</td>\n\t\t\t\t\t\t\t<td style=\" background-color: #D9D9D6\">&nbsp;
+          ${inputs.FailedLogSourceDetails.LogSourceName}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; No
+          Data Volume Observed Between (UTC)</td>\n\t\t\t\t\t\t\t<td style=\"background-color:#D9D9D6\">&nbsp;
+          ${issue.externalstarttime} and ${issue.externalendtime}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; ServiceNow
+          Ticket Number</td>\n\t\t\t\t\t\t\t<td style=\"background-color:#D9D9D6\">&nbsp;${ServiceNowTicket.number}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"1\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"
+          style=\"border-style:solid; border-color:black; border-top:none;\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\" style=\"background-color:#A7A8AA\">&nbsp;</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</table>\n\t</body>\n</html>"
+      subject:
+        simple: Remidner! | LogSource ${inputs.FailedLogSourceDetails.LogSourceName}
+          Still in Failed State
+      to:
+        simple: ${config.email_to}
+      using:
+        simple: ${config.mail_sender_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1257.5,
+          "y": 945
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "38":
+    id: "38"
+    taskid: 226a36e0-a6ba-4cc1-8302-4219868621e0
+    type: regular
+    task:
+      id: 226a36e0-a6ba-4cc1-8302-4219868621e0
+      version: -1
+      name: Release Lock
+      description: 'Release the core lock. '
+      script: Core Lock|||core-lock-release
+      type: regular
+      iscommand: true
+      brand: Core Lock
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "20"
+      '#none#':
+      - "2"
+    scriptarguments:
+      name:
+        simple: ${WriteQueue.Slot.AssignedSlot}
+      retry-count:
+        simple: "2"
+      retry-interval:
+        simple: "30"
+      using:
+        simple: ${config.core_lock_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1502.5,
+          "y": 2780
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "39":
+    id: "39"
+    taskid: 95d1e225-d3d5-4273-84f6-f9adde618658
+    type: regular
+    task:
+      id: 95d1e225-d3d5-4273-84f6-f9adde618658
+      version: -1
+      name: Set Reminder Flag
+      description: Set a value in context under the key you entered.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "44"
+      '#none#':
+      - "49"
+    scriptarguments:
+      key:
+        simple: ReminderFlag
+      value:
+        simple: "Yes"
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1277.5,
+          "y": 1130
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "40":
+    id: "40"
+    taskid: 947be42f-1595-495f-8d83-5bfdf44221eb
+    type: condition
+    task:
+      id: 947be42f-1595-495f-8d83-5bfdf44221eb
+      version: -1
+      name: Is this a reminder notification?
+      description: Is this execution related to reminding the log source team about
+        an existing service now ticket, or is this a new ticket?
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "26"
+      "yes":
+      - "41"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: ReminderFlag
+            iscontext: true
+          right:
+            value:
+              simple: "Yes"
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1820,
+          "y": 2225
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "41":
+    id: "41"
+    taskid: 4d1da4c4-90a2-4f9d-be0d-d35bcc2de623
+    type: regular
+    task:
+      id: 4d1da4c4-90a2-4f9d-be0d-d35bcc2de623
+      version: -1
+      name: Set Closing Details to Context (XSIAM)
+      description: Set a value in context under the key you entered.
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "21"
+    scriptarguments:
+      key:
+        simple: ClosingDetails
+      value:
+        simple: Log source has not been seen in XSIAM for ${issue.ingestion_failure_duration}
+          hours. It was last seen ${ExternalStartTimeStr}. ServiceNow ${ServiceNowTicket.number}
+          remains open for ${inputs.FailedLogSourceDetails.LogSourceName}.
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 2035,
+          "y": 2410
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "44":
+    id: "44"
+    taskid: a2cf7905-2550-4322-a513-4017b772211d
+    type: playbook
+    task:
+      id: a2cf7905-2550-4322-a513-4017b772211d
+      version: -1
+      name: Error Handling SubPlaybook
+      description: Playbook used to standardize what happens on error paths if a task
+        encounters an error.
+      playbookName: Error Handling SubPlaybook
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    scriptarguments:
+      EmailAddress:
+        simple: ${config.error_notification_email}
+      NotificationType:
+        simple: email
+    separatecontext: true
+    continueonerrortype: ""
+    loop:
+      iscommand: false
+      exitCondition: ""
+      wait: 1
+      max: 100
+    view: |-
+      {
+        "position": {
+          "x": 2025,
+          "y": 1500
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "45":
+    id: "45"
+    taskid: 80396c53-7161-4803-9cef-1d9d7a1941be
+    type: condition
+    task:
+      id: 80396c53-7161-4803-9cef-1d9d7a1941be
+      version: -1
+      name: Is this a reminder notification?
+      description: Is this execution related to reminding the log source team about
+        an existing service now ticket, or is this a new ticket?
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "19"
+      "yes":
+      - "46"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: ReminderFlag
+            iscontext: true
+          right:
+            value:
+              simple: "Yes"
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 960,
+          "y": 2225
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "46":
+    id: "46"
+    taskid: 45f79232-4302-4caf-bdf9-d68782bad468
+    type: regular
+    task:
+      id: 45f79232-4302-4caf-bdf9-d68782bad468
+      version: -1
+      name: Set Closing Details to Context (Cribl)
+      description: Set closing details to context
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "21"
+    scriptarguments:
+      key:
+        simple: ClosingDetails
+      value:
+        simple: Log source has failed to send logs to Cribl between ${ExternalStartTimeStr}
+          and ${ExternalEndTimeStr}. ServiceNow ${ServiceNowIncident.TicketNumber}
+          has been opened for ${inputs.FailedLogSourceDetails.LogSourceName}.
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 1175,
+          "y": 2410
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "47":
+    id: "47"
+    taskid: 46cbfc10-f260-4673-a821-b101a05686b5
+    type: regular
+    task:
+      id: 46cbfc10-f260-4673-a821-b101a05686b5
+      version: -1
+      name: 'Set SNOW Ticket # to Context'
+      description: Set multiple keys/values to the context.
+      scriptName: SetMultipleValuesV2
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "44"
+      '#none#':
+      - "49"
+    scriptarguments:
+      keys:
+        simple: TicketNumber
+      parent:
+        simple: ServiceNowIncident
+      values:
+        simple: ${inputs.FailedLogSourceDetails.SNOWTicketNum}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 1707.5,
+          "y": 1130
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "49":
+    id: "49"
+    taskid: ea541f8a-5f3a-4694-92da-46a0da20e7c1
+    type: regular
+    task:
+      id: ea541f8a-5f3a-4694-92da-46a0da20e7c1
+      version: -1
+      name: Get Core Lock
+      description: Acquire a core lock queue in order to prevent concurrent writes
+        to the lookup table
+      scriptName: Acquire_Queue_Slot
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "20"
+      '#none#':
+      - "18"
+    scriptarguments:
+      integration_instance:
+        simple: ${config.core_lock_instance}
+      max_slots:
+        simple: ${config.max_queue_slots_read}
+      outputs_prefix:
+        simple: ${config.queue_slots_context_prefix_write}
+      polling_interval:
+        simple: ${config.queue_slots_poll_interval}
+      polling_timeout:
+        simple: ${config.queue_slots_poll_timeout}
+      retry-count:
+        simple: "2"
+      retry-interval:
+        simple: "60"
+      slot_prefix:
+        simple: ${config.queue_slots_prefix_write}
+      ttl:
+        simple: ${config.queue_slots_ttl}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 817.5,
+          "y": 1310
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {
+      "27_45_Cribl": 0.89
+    },
+    "paper": {
+      "dimensions": {
+        "height": 2975,
+        "width": 2365,
+        "x": 50,
+        "y": 57.5
+      }
+    }
+  }
+inputs:
+- key: FailedLogSourceDetails
+  value: {}
+  required: false
+  description: ""
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - FailedLogSourceDetails
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs:
+  - ClosingDetails
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs:
+- contextPath: ClosingDetails
+  type: unknown
+sourceplaybookid: b4aa45db-8601-40a2-8231-6856d52b9714
+dirtyInputs: true
+adopted: true
+possibleresponses: []

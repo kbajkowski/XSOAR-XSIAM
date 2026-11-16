@@ -1,0 +1,911 @@
+id: c6efb55a-6e4b-4136-864f-681a2754db90
+version: 68
+vcShouldKeepItemLegacyProdMachine: false
+aclrelations: []
+aclowner:
+  id: ""
+  type: ""
+  name: ""
+name: ITDE_Close_SNOW_Ticket_1.4
+description: Closes Service Now tickets and sends an email to the appropriate parties.
+  Also, it updates the critical_logsources lookup table.
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: da7ad8d0-5526-40a0-8701-12fb43e16f96
+    type: start
+    task:
+      id: da7ad8d0-5526-40a0-8701-12fb43e16f96
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "9"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 260,
+          "y": -10
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "2":
+    id: "2"
+    taskid: a2a88a3d-2156-4a57-8485-c6001c8c2768
+    type: title
+    task:
+      id: a2a88a3d-2156-4a57-8485-c6001c8c2768
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 240,
+          "y": 2000
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "6":
+    id: "6"
+    taskid: 89eb2feb-1be4-4289-85bc-34a735bd07e5
+    type: regular
+    task:
+      id: 89eb2feb-1be4-4289-85bc-34a735bd07e5
+      version: -1
+      name: Send E-Mail Confirmation of Healthy Log Source
+      description: commands.server.mail.sendmail
+      script: mail-sender|||send-mail
+      type: regular
+      iscommand: true
+      brand: mail-sender
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "16"
+      '#none#':
+      - "18"
+    scriptarguments:
+      htmlBody:
+        simple: "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<title>Hello</title>\n\t</head>\n\t<body>\n\t\t<table
+          width=\"100%\" border=\"0\" align=\"center\">\n\t\t\t<tr>\n\t\t\t\t<td>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"0\" align=\"center\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\">\n\t\t\t\t\t\t\t\t<h1>&nbsp;</h1>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t\t<table
+          width=\"50%\" border=\"1\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"
+          style=\"border-style:solid; border-color:black; border-bottom:none;\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#A4CE4E\" width=\"20%\">\n\t\t\t\t\t\t\t\t<table
+          width=\"100%\" border=\"0\">\n\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t<td
+          width=\"30%\">&nbsp;</td>\n\t\t\t\t\t\t\t\t\t\t<td style=\"background-color:white\"
+          align=\"center\" width=\"40%\">\n\t\t\t\t\t\t\t\t\t\t\t<img alt=\"Embedded
+          Image\" width=\"180\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWIAAABQCAYAAAAjmX9oAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6REZFNjdBOTc4M0ZFMTFFNjg1MzVBNkVBOURFMUM5QTgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6REZFNjdBOTg4M0ZFMTFFNjg1MzVBNkVBOURFMUM5QTgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpERkU2N0E5NTgzRkUxMUU2ODUzNUE2RUE5REUxQzlBOCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpERkU2N0E5NjgzRkUxMUU2ODUzNUE2RUE5REUxQzlBOCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PriNytcAABS0SURBVHja7F0JmFTFta5hNhgYGRbDJhkQHqJgwqIRjXFPYvJpPpIQ81QSRaMmGgMxbhjzSERfDDoyGgFFUT5NeHkxPpAAISYSNeISFIEgy4AyE/ZlYAZmn+np9//0HV+/sbun6vbd5vb5v+9wh+6691bXPfXXuadOncqKRqNKIBAIBP6hizSBQCAQCBELBAJBRiPr+L+lZWfh34cg50DqIW9ClkNWqGkjtkszKfWbtV/ricOlkK9ALoEMgpSz9SCPTR63VHw8AoHAGHQPZ4GEz8bfr0LykpTbCPk95Lcg5Y8yjHwLcZgIuQLypRRt9CCIeLqolEAgsEvEf8ff52qe8zpkAeQFkHJ9iAn4CzhcZxFwgcYpEUgxyHi3qJVAILBDxM34O8fw3MOQJyFzQci7QkK+XXG4EjIV8lkbl5gEIn5R1EogEJgScY4NEiZ6Q/gqfjuI/Dm+mndWXzIIuAcON0LugPRP41KFolICgcAOctI8PxdyPeRai5BngJB3dhICpr/3Zsi9kD6iCgKBoLMScRuyIVOOv9qXlv0ax5kg5GMBJWBGinz7uBWvVLGogEAg8BtOxxF3tV7xy0DIkyFZASPh01UsQuS/hIQFAkFYibgN9LU+D3kZZDw0AAScD7kff66FnCePXSAQZAIRt4ELHzaCjG/xyzoGAZ+Bw3rIT5VzrhiBQCDoNERMMA73ccgykPGnPCTgbMjd+PMtyCnyqAUCQSYTcRu+etwyLS1z3TUAAu6Lw0rIL8UKFggEQYfXJEXf8SqQ8Z1q2ohHXCLhz+HAhRUnyeMVCLzFsOIhDAu92jK8BkOqIWsgCz+sKN/u0j0ZJEADbwLkNItnmBumDnIUUgHZDHkH8i7q0RK0duPKOr+S1SyE3ARCbnKQhLky7hkVi97wGlMmj1u60EOF/wEO+RpFufx6ntvKh/owcdTZmsXfRn3eFtqy1c5jcThftzzaudTDun3WMoKGJfiaK3hnQB5EnaIO3Y+k+xMVC0ftrnkaiXkxZA7qsSYIz7RtZZ1fuPb4AystuxxkXO0ACf8Mh/syqE+WQLpplm2EzHfZCloEOVnzlIdJxkKrtkASnm1Q3hMihg4Mx+FvkF5JinDx13+Sd1Qshj+de9HanQW5QbVlkNTHCZBrKLjOMhyngpB9T2bmdz5iJtd5A2Q8KA0C5qTc4xlGwsqAhIn7oHQ9XKzL9w1IWBlYL4LOg3kpSLi9Lg5L0wp+T8XSEqQbiXUZZAOueUWmEzEx2iLj4XZIGAcurb4lw15PiwxP6Qe5y6W60ML4meFpBUoQJn1k371Es3iuZZHauc8oHF5L4vqwCxoFJwoRxzBEccWbARnHkfBVGaj7dizKn0CRB7lQF66k7Gt4TpEShAlnG5b/nA0SZqKxZTZ0rSO8qphFUoj4YwyyyHiwkLArFiVdGfc7bAkNwOE2jwYSQXDR0+XyxCOWweYkaiHXOTV5mA6CFmNLMn4FZPx5NW3EwSQknGWNYFdlsOLbJTJOUJRC8dY7VI+f2xwUQuOaQHtWaRJLNdo9rG8Cphsi7DRs47F23Rkd4C48kx1BaMAgbh76b5A/g4y7p+j8N2a4BWK3Q3MQK3GIgLha8XqPBxJBMLEK0mBQfqXh9e9xoc6BcEkEmYgJjoCLQMbZ7azh7+LwH6L3aVmUF4NEv+JAHbhqMdvjgUQQQMCqZPjprzWLM1TsNwYDPiMxvmZYJe6xeTFkoIot7Pq8iuWa2RY0l0RQXRPxYOMz3vAOi4S5r97TovaOWJSzoOAvQxEjNq1h7vb9dZ8GEkEwwQ0WuKgnVQoDEvYk6J3JIi7GTecZlP8Brv9Eu8/oOnkTekvjgXnTo0FxSQTdIm4Dt2K6AiTMSaEXVCz0RZA+EY+2FNIufuWjRS8IplVMcuVO51xs0pygCMPOzkK59w0vfaZB2SUJSDi+jiTgZyDPBq39gp8QJxp9Zsv+Ae+M7Le3v6j7x+jpwDVmwkL4HZSyxtAa5pvKuWneW3zE4SRjruC8DTrC6JxLLLcAd+p5E999YPOyJguFOu0bc/CJeOe2rSVbzhg693srornZkSxRd8csSg5sdPvMMCBh6ssvnfgBXKZq+RYF4SNk7vL+e4cuZ5I6993O2mbBdk0cq6pQRw6NqW/KHTp7+YT3RcUdtyhvByEONCjPEKLTAjSYCMIPkwnhw2IRO43WSETt2JLXNlhsqOg3bl15//IxQ/YNEd1UTuWNIBnOVBphaCBsLghxMp+HY+4J1I06wUmdkSq2/LWH9dvqIXS9lEO2QF5zKxWjIBCWeLNb14aO0c1yAeRUyHBLx6jDDZaOMdXmVsjrqMeW8BBx+dZ1Kto6Pv6jR1eclT/vhuWRrrkt2Rmucyc4eK0pULJHoTwbOig3TcXCgQIxmKDOXOr6Pch1KhZ7rnsew6cWQObjNx8yOO9SHC5N8JVu8qVuXEyjQSbTOqNC4rf90CIoHdxnuS902ne4QR06at9FuO8/DK5XZBkpnNgeZXAeSXkh5Encb2/nJeKa6l3qWNX49h83R7IHzP3zme/ddtlb48U14Rjod5+VpBPEk57TSYNOsNnh+dsZE/ojm+3AyZ8HIHfjWoz+mKVpSTHp+NQ0fm+e5vnTOqlOTlL6eZJLE7gR0m1fpXH+Osg/NHSM+czvVLHl+3YmxrlDPOde7sC1GEVyP3Qs5YKX4PmIo1FYw1uSxhmu3TFgzI4DRfsznIid9q9+GQrzpRTf36OcidRI6zegjnw13AiZ7sBgVKhiuTfWWNnDBIK2DQ6YAuAXDuh8gWU0rMV1R3cuIt6/c72KRFKFrGSXLDvnSIbrS6FmuUqIbls9DGXpkkAxh+DwQ43zOWNt4qPrbthBbsXhr8r5xC/cVeJtqwMKMpuEr8XhdcgIhy9Nv/JqXP/CzkHEkZZmdWB3cUfFqmq7jvz75uKyDNYZ3dd6vv7pTrCdrhIv8qDVqLOQhlZqnQuDCTsId+N+TNlfUt0R+kBexn0+I3SUsSTMrce40CPPxT67HPeZEHwi3vXhehWNauUhePbVMQWR1owNK9Z9rScxzoHoDlozLR9sm3KOUXpZ7lZ9WFFOa9UkLrhQs4N8RzkUu6zRUV6ychsIMouEJypvEgBxYncJ7tcvuETc0tygqiq1Y1SbWrJPWrlu+EYh4pSosSai7tAsz6Xkt8f9n5N4OqPddOtY76RrwvKrPeVhuw6xBi5B5pDwUGWQhMgBkISfDi4R79y+URlO4Lz4zmm9MtQq1nVNcMkpQ6KWKuZ51gNnegdAuET1ixrlF8eFBJkQcUEHHYS6uVDp7VQdD1rl1CXmNtikYpm2THAl7n2+EmQKFijzid9jcTq20fq/CS6Djl0WPCJuaWlSR4+MMj0NVvGgv2wYlolWcaGBwrSBoTitmpYqF3noJPZh9rZ725GgU4MJXSImYYqvQi6C9MbAcDrkAgh1iq6Gb6hYsL0ufiH8lBHWMPOmXGhwCnceZwrZXnE6xrkVbuN0OWSDXR0LRhzx3op/Gna6OKv41O5fHrNdZWWO8uQbDKAfW6hcsIFzOfrfoHGebsL353HdTXH/d2SyDvXk49TdkJSDwc2ox/xEX1qumcW45nIcn4Rcq3HN81F+PM59L+46P1exTQna11V26HAAKdqXA+z5mtcwpQFdHaMBQ5ddaaIcxvisBYdlqOufcHxU6W1mPA7lL8K5q4JhETNu+MiBoXZPZx6K93cM2JFBOmvyGtWYQPGOOVQPxnrPSEb8abom6BbRDSG6NRkJt+ssrC9X4S3VvO53hB5DbdBwA9MzNItPh/7M7iiRPPN7QxjquUjzupOD45qo3L8JZNw7nUv8bvXooxmkQyYr0qraKQoXwjzgUD3m4Xr/SuEKSYeIdfcjfAV1mGdgdbEjfV/pbeszSegq1NDVsTWQhwyvTYtYx033DQwI2cEg4gO70vYq7DlSOPpITbfaDFEgkxwNiVYo8tWpPM06sK0T7Qhtktu4ZxJLhTp5ueY1HrbxCsy1/3/QKDoIdRkpfBVaTNQsV2K6pRLK0wD6rWYfGO8/ETfWV6vmplMduFL2kjUjt2SIApm4JuoSKAmtwTvTrMPDSRLmmLgmkg0o3JS0j8b57ByrbNb/dc1y5ypBGN0STF5VrFn8L17omL+Tdft3cTO/M5y41BtbB/edcmFGpCw2CfFL5iqgRbhaxTZVNAWXTZeksJTT/R26+sAJkvnoVHba8NOa5U4X2golTLZfesSmjunuKPQZ/4m4utKx7Y8am3OKP9rfa//J/Y70C7kSmSQiaUry6hSFcjHL1xob938A5ycjeBNffTLLfpjm+Vx2fY3LbS2uiXDCZPslt3XsFH9dE/W1B1Vr60lOXnLluuH/EteElkVMMmaSnucN770TkmpyzMQ1kWxAGRCgth4knBVKDAyajvlHxIf2ljt9ybXlA/oKEf8/dBTXO92QPGd0kFfViSXO3QLU1p9SgjAiSDp2or9EfPSw48HtDU05Qw8e7V4TciUy8RE3pfoSpLpbxfJJ6GCzhgVdZVC3nGHFQ/IC3tZ5SiBwF139I2Kmu2xpGebGpVdvHRz2PclMBjAdYiQR79Eod6+1gkg5ZBEnG1QaA9TWPYQnQonGoFXIHyKuqtzm1r3fLjspGnIl6u6kwoFc69T/ZU9LBk7qLda4nykRJxpUDgaorTN9b8Sw4mDQKuRP1ER1pWuLL/ZWFX465Epk4prQJUa6HLgHXLJ8H9M1g9qPOvBbyjXPZQ6JG4VTBDZQblCWuVla3K6QP0RcV+Na8u1Ia1affVU9jvYvqjkhpErkSNREO6uY4Ww3qcT5FQ7ie90UmrUO/JZNmucyfG056ua3ddOiBJ0NHxiU/Rt07MPwEXFrK33EQ928xfqK/uX9i7aHddsbEx+xti/MyjT2Xpp1M3VNJCJi1iGi6Rb4JuQJn58HBzudlYDdlCAoaMtT3V1Tx2a5XSHvfcT1tXuUy763TbtObAixEpm4JryOIDG9X88EAwLJXHd56HRY8n5PqOnmYM5DXTMhvDLwYJY0FduIVge34bn1drtO3hNxTfV+t2+x40BRmK0PEyKu87hupik2k1kk/6N5PucDnki0+7QJcP5YyGuQk22cbrKjuOz8ERz8QbMcV+o+25YlLQ0dOw2yytr+KwCuidqjzW7forouv3+IFUjbArRy8HpqaUDR+HxzNU9JNqhwD7EHNV8dr4Z0xX2npFh6naxzDFexHUYmW29pT3GLKMNsWx9BLjCwrpZYFlmi+pyHQ5G1tZUjwDVLXXjUr6GOizt5P3pRxTIR6li73MljKTeyxe8+bNj+NBbuUbFc2OwXC/DZOe11wHsibmzId/sWkdYuJzY256j83FDOo+jmmqj2qX51BnXskYTQq6Cs3GBxquZ16MebgHMeo/WSagLPcmXQMv2udV68pXOR1WEWGPxek+1xzoE8jzr82MoN3Zb2k0nKfwy5AnIYn43C9/sceh5TXXrOnZqI6QJDO3OjWN1dOr4K2YxzHsfxaSudajIdo4HxBWuA/3Y7w4TPmhFKs/0l4pam3l7cZtfhwn3D+h0Jo2Ws65rwK2i92oCIU0W2cN88JlzRnZzkmn3us/crdIQyFZuQOWy1A9uM/llOEp+iUs9RlOD8Fak6WjusNmyfKyH/jntwJp6WwsB27cD+MccaJATugpNwN1ruBx1wyft9FDy/7ZaOMRthvfX2xmdH99aIDt4KH7DejHb4R8StrZ5kR9tX1aMqpESsG75W71P9nMg3QYulEsp6qzJPTKSsjjDCZv05iMyFfF2zPKM89iizRDLcDGF4iu+5c8O30AYvCFe6ahXXWGGbS2ycPryDZ5gKnMOiG+yLbW4wbyfrIi3chM+T9ft7jxSGdccOXSL2a/sop/atY0ehr/gZH37DRHSSb2p2Znakp12ow1yJsvCEjF9q7ybwCBdDprT9x1sibmqs9OpWh44VRMKmNOiYJotUmnyqpolvulCjDC2WP/rwO+agvXXdIqWWG8RJkIQfFar0BNyheZEP92XS+X7eE3FLs2dWalVt1zDmnDBZVedXFjqTkLkOBxYr0RCt02c9/A30Kz+k+1aBOjKE7WYX6nEVOupEJXDbKuabOidvH/eSDVVsp5tKP4jYs4UWNQ15XUKoM0GOIXbcNRHXUZohjGbgun+3B/M3IGNxvxKrg+p25v9WsYkcJ8FkSxuUwAsyjkA4J3G1cj/iiM/1TNxvZltGQ6+J2LOZ/IbmnJwQ6kuhQVm/oiZMYnm7G3YW+mIZ9fAcpNXher+jYhN05+E+m2125hmWZZxu23OwuQvCeNOPhCY9JeRFlo7NV87nEeGmmoyamYD7rIv/wluyikZbvbtVKPWEA+d6zbL/9KmOWw3quMdGR2Ey+2vwyk7SowXD2Fu7W24xfIgz5s+17xhpdOR5qBuTJDH87lsqFiGhC76mPqViW7gfSlLmoEH7uoXdCT5jOJeuT91k/sLkuk6RMWO8b8Jz5DO8BXKV0t9wtj24vdhLlo4l3SMyS5WWeUdZB3a/r/ZWjPXiVj0LGj6Yc/2KUR4+vymTxy1dKDaFt0BnIdExfSe3JecO0IzjHGK5PfgGQRdNjSV7rIFiLeQVdIxtLtdtMA6TaGWr2I7Q7Mzx8aVM3L/NssZXQv6KOjXKUw2kno2xdIwLMhi2Vmy90VHH6uN0jPHnZZaOrdJ5u4rCavTaIpYnKnDaeqFSvWtJ0OpGa2i2iguPQofm1jiUWvq+5Ql2Gj3jG9M6t67vLRFnZXl2q9zs1oiojyCAHZoT1g3SEoJ4dAnrD8sRIhYIBELEidgxx7NdcWERt8rjFQgEQsSfIOLcfK9uVZDfJBaxQCAQIv4EsnMLvLpVj65NMjMoEAiEiD+BvPw+Xt2qb2FdF3m8AoGgsxCxd6/wMdeEJ5Zq/6KafI/bslbUSSAQ2CXitzy7G8PXsrI82f58QK+anh62Y8TTdhQIBKEjYq5p9y6wPDvHk1SYg/scHehhO5ZMHrd0l6iTQCCwR8TTRrypYpsfrlZeuCny8l1Pzwi7u7ZnQUOuB+1XoWJ7jd0tqiQQCGxzVlSWHQsEAoGv+F8BBgDiDC1cSE5nCAAAAABJRU5ErkJggg==\"
+          />\n\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t<td width=\"30%\">&nbsp;</td>\n\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#00FF00\" align=\"center\">\n\t\t\t\t\t\t\t\t<h2>
+          Logsource is active again, Service now ticket ${inputs.LogSourceDetails.SNOWTicketNum}
+          is closed</h2>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\" style=\"background-color: #A7A8AA\">&nbsp;</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; Log
+          Source</td>\n\t\t\t\t\t\t\t<td style=\" background-color: #D9D9D6\">&nbsp;
+          ${inputs.LogSourceDetails.LogSourceName}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; Started
+          Reporting Between (UTC)</td>\n\t\t\t\t\t\t\t<td style=\"background-color:#D9D9D6\">&nbsp;
+          ${issue.externalstarttime} and ${issue.externalendtime}</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          style=\"background-color:#D9D9D6;\" width=\"20%\" height=\"35\">&nbsp; ServiceNow
+          Ticket Number</td>\n\t\t\t\t\t\t\t<td style=\"background-color:#D9D9D6\">&nbsp;${inputs.LogSourceDetails.SNOWTicketNum}
+          </td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t\t<table width=\"50%\"
+          border=\"1\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-style:solid;
+          border-color:black; border-top:none;\">\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td
+          colspan=\"2\" style=\"background-color:#A7A8AA\">&nbsp;</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</table>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</table>\n\t</body>\n</html>"
+      subject:
+        simple: LogSource ${inputs.LogSourceDetails.LogSourceName} is Active Again
+      to:
+        simple: ${config.email_to}
+      using:
+        simple: ${config.mail_sender_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -50,
+          "y": 1000
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "9":
+    id: "9"
+    taskid: c579b3a3-ce8e-4261-8d6b-6aa56ff82f52
+    type: condition
+    task:
+      id: c579b3a3-ce8e-4261-8d6b-6aa56ff82f52
+      version: -1
+      name: Does ServiceNow Ticket Exist?
+      description: 'Checks whether a SNOW Ticket Number was found in the lookup table
+        for the log source. If one was found, that means a ticket exists and we should
+        attempt to close it. If no service now ticket exists, then the playbook will
+        follow a path of closing the ticket. '
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "19"
+      "yes":
+      - "10"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isExists
+          left:
+            value:
+              simple: inputs.LogSourceDetails.SNOWTicketNum
+            iscontext: true
+          right:
+            value: {}
+      - - operator: isNotEmpty
+          left:
+            value:
+              simple: inputs.LogSourceDetails.SNOWTicketNum
+            iscontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 260,
+          "y": 190
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "10":
+    id: "10"
+    taskid: 76103792-f6cc-4f85-8d1b-fafd9029a9db
+    type: regular
+    task:
+      id: 76103792-f6cc-4f85-8d1b-fafd9029a9db
+      version: -1
+      name: Get ServiceNow Incident Details
+      description: Retrieve Incident details from ServiceNow
+      script: '|||servicenow-get-incident'
+      type: regular
+      iscommand: true
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "16"
+      '#none#':
+      - "11"
+    scriptarguments:
+      IncidentId:
+        simple: ${inputs.LogSourceDetails.SNOWTicketNum}
+      using:
+        simple: ${config.service_now_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 162.5,
+          "y": 370
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "11":
+    id: "11"
+    taskid: c9e32dcd-878d-460b-916e-88511f3dd414
+    type: condition
+    task:
+      id: c9e32dcd-878d-460b-916e-88511f3dd414
+      version: -1
+      name: Is ServiceNow Ticket Closed?
+      description: Check if ServiceNow Incident status is already Closed/Cancelled.
+        If it is, then the playbook will follow a path to close the issue. If the
+        ticket is not closed/cancelled, then we will attempt to close.
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "12"
+      "yes":
+      - "22"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: ServiceNowTicket.state
+            iscontext: true
+          right:
+            value:
+              simple: Closed
+        - operator: isEqualString
+          left:
+            value:
+              simple: ServiceNowTicket.state
+            iscontext: true
+          right:
+            value:
+              simple: Cancelled
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 162.5,
+          "y": 570
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "12":
+    id: "12"
+    taskid: ec313b5f-2d13-4514-b70f-158a6fb5ae91
+    type: regular
+    task:
+      id: ec313b5f-2d13-4514-b70f-158a6fb5ae91
+      version: -1
+      name: Close ServiceNow ticket
+      description: Close ServiceNow Ticket
+      script: '|||servicenow-update-incident'
+      type: regular
+      iscommand: true
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "16"
+      '#none#':
+      - "26"
+    scriptarguments:
+      incident_id:
+        simple: ${inputs.LogSourceDetails.SNOWTicketNum}
+      location:
+        simple: ${config.location}
+      resolutionAction:
+        simple: ${config.resolution_action}
+      resolutionCI:
+        simple: ${inputs.LogSourceDetails.ConfigurationItem}
+      resolutionCategory:
+        simple: ${config.resolution_category}
+      resolutionCode:
+        simple: ${config.resolution_code}
+      resolutionSteps:
+        simple: The ticket was automatically closed because log source is reporting
+          as expected.
+      resolutionSubCategory:
+        simple: ${config.resolution_sub_category}
+      stabilityCategory:
+        simple: ${config.stability_category}
+      state:
+        simple: Closed
+      subState:
+        simple: ${config.resolution_sub_state}
+      using:
+        simple: ${config.service_now_instance}
+      workNotes:
+        simple: The ticket was automatically closed because log source is reporting
+          as expected.
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": -70,
+          "y": 725
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "14":
+    id: "14"
+    taskid: dd72ccc3-bdd1-4741-88f7-33b54e7bcadb
+    type: regular
+    task:
+      id: dd72ccc3-bdd1-4741-88f7-33b54e7bcadb
+      version: -1
+      name: Reset IsAlert Triggered flag in Lookup
+      description: Update lookup table for the log source, set the IsAlert Triggered
+        flag to false.
+      script: Core REST API|||core-api-post
+      type: regular
+      iscommand: true
+      brand: Core REST API
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "16"
+      '#none#':
+      - "21"
+    scriptarguments:
+      body:
+        simple: '{"request_data": {"dataset_name": "critical_logsources", "key_fields":
+          ["logsourcename","alertsource"],"data":[{"logsourcename":"${inputs.LogSourceDetails.LogSourceName}","logsourcetype":"${inputs.LogSourceDetails.LogSourceType}","servicenowcategory":"${inputs.LogSourceDetails.ServiceNowCategory}","servicenowsubcategory":"${inputs.LogSourceDetails.ServiceNowSubcategory}","configurationitem":"${inputs.LogSourceDetails.ConfigurationItem}","firstalertedat":"","isalerttriggered":"FALSE","snowticketnum":"","alertsource":"${issue.detectionsource}"}]}}'
+      retry-count:
+        simple: "3"
+      retry-interval:
+        simple: "30"
+      timeout:
+        simple: "1"
+      uri:
+        simple: /public_api/v1/xql/lookups/add_data
+      using:
+        simple: ${config.core_rest_api_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 230,
+          "y": 1460
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "16":
+    id: "16"
+    taskid: 665c901a-0be0-4b75-88ff-8407bb4e4261
+    type: playbook
+    task:
+      id: 665c901a-0be0-4b75-88ff-8407bb4e4261
+      version: -1
+      name: Error Handling SubPlaybook
+      description: Playbook used to standardize what happens on error paths if a task
+        encounters an error.
+      playbookName: Error Handling SubPlaybook
+      type: playbook
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    scriptarguments:
+      EmailAddress:
+        simple: ${config.error_notification_email}
+      NotificationType:
+        simple: email
+    separatecontext: true
+    continueonerrortype: ""
+    loop:
+      iscommand: false
+      exitCondition: ""
+      wait: 1
+      max: 100
+    view: |-
+      {
+        "position": {
+          "x": -730,
+          "y": 1290
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "18":
+    id: "18"
+    taskid: 55eb8f60-d736-47d3-b0e7-81b379dc0d8b
+    type: regular
+    task:
+      id: 55eb8f60-d736-47d3-b0e7-81b379dc0d8b
+      version: -1
+      name: Set Closing Details to Context
+      description: Set closing details to context
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "27"
+    scriptarguments:
+      key:
+        simple: ClosingDetails
+      value:
+        simple: ServiceNow ${inputs.LogSourceDetails.SNOWTicketNum} has been closed
+          for ${inputs.LogSourceDetails.LogSourceName}. The log source is healthy
+          and reporting to ${issue.detectionsource}
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": -70,
+          "y": 1150
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "19":
+    id: "19"
+    taskid: 5c6106f6-24bd-4cc7-95c9-0fd64f3413cb
+    type: regular
+    task:
+      id: 5c6106f6-24bd-4cc7-95c9-0fd64f3413cb
+      version: -1
+      name: Set Closing Details to Context
+      description: Set closing details to context
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "27"
+    scriptarguments:
+      key:
+        simple: ClosingDetails
+      value:
+        simple: ${inputs.LogSourceDetails.LogSourceName} log source is reporting as
+          healthy in ${issue.detectionsource} however no active ServiceNow ticket
+          was found.
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 790,
+          "y": 1050
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "20":
+    id: "20"
+    taskid: 5144beb3-be3f-4105-91ec-89d8aca474f9
+    type: regular
+    task:
+      id: 5144beb3-be3f-4105-91ec-89d8aca474f9
+      version: -1
+      name: Write Event Details to History Lookup
+      description: Update historical lookup table with event info
+      script: Core REST API|||core-api-post
+      type: regular
+      iscommand: true
+      brand: Core REST API
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "16"
+      '#none#':
+      - "24"
+    scriptarguments:
+      body:
+        simple: '{"request_data": {"dataset_name": "critical_logsources_history","data":[{"logsourcename":"${inputs.LogSourceDetails.LogSourceName}","logsourcetype":"${inputs.LogSourceDetails.LogSourceType}","firstalertedat":${issue.externalendtime},"isalerttriggered":"FALSE","snowticketid":"${ServiceNowTicket.[0].id}","snowticketnum":"${inputs.LogSourceDetails.SNOWTicketNum}","message":"${ClosingDetails}","isactive":"1","hasfailed":"0","alertcount":"1"}]}}'
+      retry-count:
+        simple: "5"
+      retry-interval:
+        simple: "120"
+      timeout:
+        simple: "1"
+      uri:
+        simple: /public_api/v1/xql/lookups/add_data
+      using:
+        simple: ${config.core_rest_api_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 240,
+          "y": 1730
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "21":
+    id: "21"
+    taskid: 6539debc-75df-4ca5-8978-3eb8c0665768
+    type: regular
+    task:
+      id: 6539debc-75df-4ca5-8978-3eb8c0665768
+      version: -1
+      name: Convert Date Time to String
+      description: Convert date to string
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "20"
+    scriptarguments:
+      key:
+        simple: ExternalStartTimeStr
+      value:
+        complex:
+          root: issue
+          accessor: externalstarttime
+          transformers:
+          - operator: toString
+            args:
+              format: {}
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 230,
+          "y": 1600
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "22":
+    id: "22"
+    taskid: a246fc52-3f96-400e-ad67-4314a474d2ac
+    type: regular
+    task:
+      id: a246fc52-3f96-400e-ad67-4314a474d2ac
+      version: -1
+      name: Set Closing Details to Context
+      description: Set closing details to context
+      scriptName: Set
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#none#':
+      - "27"
+    scriptarguments:
+      key:
+        simple: ClosingDetails
+      value:
+        simple: ${inputs.LogSourceDetails.LogSourceName} log source is reporting as
+          healthy in ${issue.detectionsource}, however no active ServiceNow ticket
+          was found.
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 350,
+          "y": 1150
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "23":
+    id: "23"
+    taskid: 41020bdc-dbb4-4a94-8f12-d088fee474b1
+    type: regular
+    task:
+      id: 41020bdc-dbb4-4a94-8f12-d088fee474b1
+      version: -1
+      name: Get Core Lock
+      description: Gets a specific lock. If the lock doesn't exist, it creates one.
+        If the lock is already in use, the command waits until the lock is released
+        or until timeout is reached. If timeout is reached and the lock hasn't been
+        released, the command fails to get the lock.
+      script: Core Lock|||core-lock-get
+      type: regular
+      iscommand: true
+      brand: Core Lock
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    scriptarguments:
+      info:
+        simple: Lock used for updating log source monitoring lookup tables
+      name:
+        simple: LogSourceMonitoringCloseLock
+      retry-count:
+        simple: "5"
+      retry-interval:
+        simple: "120"
+      timeout:
+        simple: "600"
+      using:
+        simple: ${config.core_lock_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 690,
+          "y": 1320
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "24":
+    id: "24"
+    taskid: 01e6f970-2244-4df8-9e07-698fabe6781a
+    type: regular
+    task:
+      id: 01e6f970-2244-4df8-9e07-698fabe6781a
+      version: -1
+      name: Release Lock
+      description: Release the core lock
+      script: Core Lock|||core-lock-release
+      type: regular
+      iscommand: true
+      brand: Core Lock
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "16"
+      '#none#':
+      - "2"
+    scriptarguments:
+      name:
+        simple: ${WriteQueue.Slot.AssignedSlot}
+      retry-count:
+        simple: "2"
+      retry-interval:
+        simple: "30"
+      using:
+        simple: ${config.core_lock_instance}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 240,
+          "y": 1870
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "26":
+    id: "26"
+    taskid: 97c4ece7-33a7-4342-b007-7d317beef6f4
+    type: condition
+    task:
+      id: 97c4ece7-33a7-4342-b007-7d317beef6f4
+      version: -1
+      name: Was ServiceNow Ticket Successfully Closed?
+      description: Check if ticket was successfully closed
+      type: condition
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#default#':
+      - "16"
+      "yes":
+      - "6"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isNotEqualString
+          left:
+            value:
+              simple: ServiceNowTicket.[1].status
+            iscontext: true
+          right:
+            value:
+              simple: failure
+        - operator: isNotExists
+          left:
+            value:
+              simple: ServiceNowTicket.[1].status
+            iscontext: true
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": -70,
+          "y": 850
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "27":
+    id: "27"
+    taskid: 251cc15f-7600-44d6-801c-5fddd569cb52
+    type: regular
+    task:
+      id: 251cc15f-7600-44d6-801c-5fddd569cb52
+      version: -1
+      name: Get Core Lock
+      description: Acquire Core Lock slot to prevent multiple concurrent writes to
+        the lookup table.
+      scriptName: Acquire_Queue_Slot
+      type: regular
+      iscommand: false
+      brand: ""
+      playbooktaskmissingcomponent: null
+      istaskmissingcomponenterrordismissed: false
+    nexttasks:
+      '#error#':
+      - "16"
+      '#none#':
+      - "14"
+    scriptarguments:
+      integration_instance:
+        simple: ${config.core_lock_instance}
+      max_slots:
+        simple: ${config.max_queue_slots_write}
+      outputs_prefix:
+        simple: ${config.queue_slots_context_prefix_write}
+      polling_interval:
+        simple: ${config.queue_slots_poll_interval}
+      polling_timeout:
+        simple: ${config.queue_slots_poll_timeout}
+      retry-count:
+        simple: "2"
+      slot_prefix:
+        simple: ${config.queue_slots_prefix_write}
+      ttl:
+        simple: ${config.queue_slots_ttl}
+    separatecontext: false
+    continueonerror: true
+    continueonerrortype: errorPath
+    view: |-
+      {
+        "position": {
+          "x": 230,
+          "y": 1320
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+outlinetasks: {}
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 2070,
+        "width": 1900,
+        "x": -730,
+        "y": -10
+      }
+    }
+  }
+inputs:
+- key: LogSourceDetails
+  value: {}
+  required: false
+  description: ""
+  playbookInputQuery: null
+inputSections:
+- inputs:
+  - LogSourceDetails
+  name: General (Inputs group)
+  description: Generic group for inputs
+outputSections:
+- outputs:
+  - ClosingDetails
+  name: General (Outputs group)
+  description: Generic group for outputs
+outputs:
+- contextPath: ClosingDetails
+  type: unknown
+sourceplaybookid: b4aa45db-8601-40a2-8231-6856d52b9714
+dirtyInputs: true
+adopted: true
+possibleresponses: []
